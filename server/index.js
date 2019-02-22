@@ -1,3 +1,5 @@
+import {getArticles, getArticlesConnection} from "./service";
+
 const {ApolloServer, gql} = require('apollo-server');
 
 // This is a (sample) collection of books we'll be able to query
@@ -17,21 +19,41 @@ const books = [
 // Type definitions define the "shape" of your data and specify
 // which ways the data can be fetched from the GraphQL server.
 const typeDefs = gql`# Comments in GraphQL are defined with the hash (#) symbol.
-
+interface Node {
+    id: ID!
+}
+type PageInfo {
+    startCursor: String!,
+    endCursor: String!,
+    hasNextPage: Boolean!,
+    hasPreviousPage: Boolean!
+}
 type Viewer{
     username: String
 }
-type Article {
+type Article implements Node {
     id: ID!
     title: String
     summary: String
     link: String
+    time: String
 }
+
+type ArticleConnection {
+    pageInfo: PageInfo!
+    edges: [ArticleEdge!]!
+}
+type ArticleEdge  {
+    cursor: String!
+    node: Article!
+}
+
 # The "Query" type is the root of all GraphQL queries.
 # (A "Mutation" type will be covered later on.)
 type Query {
-    articles: [Article]
+    articles: ArticleConnection
     viewer: Viewer
+    node(id: ID!): Node
 }
 `;
 
@@ -39,7 +61,7 @@ type Query {
 // schema.  We'll retrieve books from the "books" array above.
 const resolvers = {
     Query: {
-        articles: () => [{id: 1, title: 1}, {id: 2, title: 2}]
+        articles: async () => await getArticlesConnection({})
     },
 };
 
