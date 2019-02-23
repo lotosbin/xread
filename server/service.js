@@ -34,7 +34,7 @@ export async function getArticles({first, after, last, before}) {
 export async function addArticle({link, title, summary, time}) {
     let database;
     try {
-        database = await MongoClient.connect(mongoConnectionString);
+        database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
         const filter = {title, link};
         const update = {$set: {link, title, summary, time}};
         const response = await database.db("xread").collection("article").updateOne(filter, update, {upsert: true});
