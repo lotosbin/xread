@@ -1,7 +1,8 @@
 import {addArticle, getArticles} from "./service";
 import {makeConnection} from "./relay";
 
-const {ApolloServer, gql} = require('apollo-server');
+const {ApolloServer, gql, PubSub} = require('apollo-server');
+const pubsub = new PubSub();
 
 // Type definitions define the "shape" of your data and specify
 // which ways the data can be fetched from the GraphQL server.
@@ -45,8 +46,12 @@ type Query {
 type Mutation {
     addArticle(title: String, summary: String,link:String,time:String):Article
 }
-`;
+type Subscription {
+    articleAdded: Article
+}
 
+`;
+const ARTICLE_ADDED = "ARTICLE_ADDED";
 // Resolvers define the technique for fetching the types in the
 // schema.  We'll retrieve books from the "books" array above.
 const resolvers = {
@@ -54,8 +59,18 @@ const resolvers = {
         articles: async (parent, args, context) => await makeConnection(getArticles)(args)
     },
     Mutation: {
-        addArticle: async (root, args, context) => await addArticle(args)
-    }
+        addArticle: async (root, args, context) => {
+            let article = await addArticle(args);
+            pubsub.publish(ARTICLE_ADDED, {articleAdded: article});
+            return article;
+        }
+    },
+    Subscription: {
+        articleAdded: {
+            // Additional event labels can be passed to asyncIterator creation
+            subscribe: () => pubsub.asyncIterator([ARTICLE_ADDED]),
+        },
+    },
 };
 
 // In the most basic sense, the ApolloServer can be started
