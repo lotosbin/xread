@@ -1,4 +1,4 @@
-import {getArticles, getArticlesConnection} from "./service";
+import {addArticle, getArticles, getArticlesConnection} from "./service";
 
 const {ApolloServer, gql} = require('apollo-server');
 
@@ -55,6 +55,9 @@ type Query {
     viewer: Viewer
     node(id: ID!): Node
 }
+type Mutation {
+    addArticle(title: String, summary: String,link:String,time:String):Article
+}
 `;
 
 // Resolvers define the technique for fetching the types in the
@@ -63,6 +66,9 @@ const resolvers = {
     Query: {
         articles: async () => await getArticlesConnection({})
     },
+    Mutation: {
+        addArticle: async (root, args, context) => await addArticle(args)
+    }
 };
 
 // In the most basic sense, the ApolloServer can be started

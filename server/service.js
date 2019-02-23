@@ -28,3 +28,25 @@ export async function getArticlesConnection({first = 10, after, last, before}) {
         edges: articles.map(it => ({cursor: it.id, node: it})) || []
     }
 }
+
+export async function addArticle({link, title, summary, time}) {
+    let database;
+    try {
+        database = await MongoClient.connect(mongoConnectionString);
+        const filter = {title, link};
+        const update = {$set: {link, title, summary, time}};
+        const response = await database.db("xread").collection("article").updateOne(filter, update, {upsert: true});
+        const result = await database.db("xread").collection("article").findOne(filter);
+        if (result) {
+            result.id = result._id.toString();
+        }
+        return result;
+    } catch (e) {
+        console.log(e.message);
+        return null;
+    } finally {
+        if (database) {
+            await database.close();
+        }
+    }
+}
