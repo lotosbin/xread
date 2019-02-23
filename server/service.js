@@ -1,32 +1,34 @@
 import {MongoClient, ObjectId} from "mongodb";
-import _ from 'lodash';
+import assert from "assert";
 
 export let mongoConnectionString = process.env.MONGO;
 
-export async function getArticles({first = 10, after, last, before}) {
+export async function getArticles({first, after, last, before}) {
+    assert(!!first || !!last, "first or last should grate then 0");
+    assert(!(!!first && !!last), 'first or last cannot set same time');
     const database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
     const query = {};
-    if (after) {
-        query._id = {$gt: new ObjectId(after)};
+    let sort;
+    let limit;
+    if (first) {
+        sort = {_id: 1};
+        limit = first;
+        if (after) {
+            query._id = {$gt: new ObjectId(after)};
+
+        }
+    } else {
+        sort = {_id: -1};
+        limit = last;
+        if (before) {
+            query._id = {$lt: new ObjectId(before)};
+        }
     }
-    const limit = first + 1;
-    const result = await database.db("xread").collection("article").find(query).sort({time: 1}).limit(limit).toArray();
+
+    const result = await database.db("xread").collection("article").find(query).sort(sort).limit(limit).toArray();
     await database.close();
     result.forEach(it => it.id = it._id.toString());
     return result;
-}
-
-export async function getArticlesConnection({first = 10, after, last, before}) {
-    const articles = await getArticles({first, after, last, before});
-    return {
-        pageInfo: {
-            startCursor: _.chain(articles).map(it => it.id).first() || null,
-            endCursor: _.chain(articles).map(it => it.id).last() || null,
-            hasNextPage: !!(articles.length > first),
-            hasPreviousPage: !!(after && articles.length),
-        },
-        edges: articles.map(it => ({cursor: it.id, node: it})) || []
-    }
 }
 
 export async function addArticle({link, title, summary, time}) {
