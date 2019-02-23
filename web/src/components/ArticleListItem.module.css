@@ -1,0 +1,14 @@
+.container {
+    padding: 8px 8px 20px;
+    overflow: hidden;
+}
+
+.title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.summary {
+    text-align: start;
+}
