@@ -27,7 +27,7 @@ API_URL=http://localhost:4000 cd spider && yarn start
 http://localhost:3000/#/spider/subscribe?url=%s
 ```
 # arch
-
+```
 web     ----+
             |
 app     -------query/mutation/subscription---->server(graphql)----query/mutation---> mongodb
@@ -35,6 +35,7 @@ app     -------query/mutation/subscription---->server(graphql)----query/mutation
 desktop ----+                                          |             parse keywords/category on add article
                                                        |                |
                         spider      ----mutation-------+                +--------->    baidu api
+```
 
 # deploy
 
