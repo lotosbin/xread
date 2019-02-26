@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a409dac6-61dc-4e5d-8cb7-0c931ff576ba" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/service.js" beforeDir="false" afterPath="$PROJECT_DIR$/server/service.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web/src/components/FeedList.js" beforeDir="false" afterPath="$PROJECT_DIR$/web/src/components/FeedList.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -23,34 +19,19 @@
   <component name="FileEditorManager">
     <leaf>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/server/service.js">
+        <entry file="file://$PROJECT_DIR$/web/src/Feed.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="328">
-              <caret line="135" selection-start-line="135" selection-end-line="135" />
-              <folding>
-                <element signature="e#9#55#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="306">
+              <caret line="22" column="8" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="8" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/web/src/App.js">
+        <entry file="file://$PROJECT_DIR$/web/src/components/FeedList.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="233">
-              <caret line="21" column="58" lean-forward="true" selection-start-line="21" selection-start-column="58" selection-end-line="21" selection-end-column="58" />
-              <folding>
-                <element signature="e#0#39#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/server/index.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="80" selection-start-column="80" selection-end-column="80" />
+            <state relative-caret-position="72">
+              <caret line="4" column="75" selection-start-line="4" selection-start-column="75" selection-end-line="4" selection-end-column="75" />
             </state>
           </provider>
         </entry>
@@ -98,7 +79,6 @@
         <option value="$PROJECT_DIR$/web/src/FeedSubscribe.module.css" />
         <option value="$PROJECT_DIR$/web/src/components/FeedSubscribeContainer.js" />
         <option value="$PROJECT_DIR$/web/src/Feed.module.css" />
-        <option value="$PROJECT_DIR$/web/src/components/FeedList.js" />
         <option value="$PROJECT_DIR$/web/src/Feed.js" />
         <option value="$PROJECT_DIR$/spider/apollo/client.js" />
         <option value="$PROJECT_DIR$/web/src/components/ArticleList.js" />
@@ -133,6 +113,7 @@
         <option value="$PROJECT_DIR$/server/index.js" />
         <option value="$PROJECT_DIR$/server/service.js" />
         <option value="$PROJECT_DIR$/web/src/App.js" />
+        <option value="$PROJECT_DIR$/web/src/components/FeedList.js" />
       </list>
     </option>
   </component>
@@ -210,7 +191,7 @@
   <component name="PropertiesComponent">
     <property name="JavaScriptWeakerCompletionTypeGuess" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1551177425953" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1551182168463" />
     <property name="com.intellij.lang.jsgraphql.ide.injection.JSGraphQLLanguageInjectionUtil.gql" value="apollo" />
     <property name="full.screen.before.presentation.mode" value="false" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="/usr/local/bin/node" />
@@ -372,7 +353,7 @@
       <updated>1550211462184</updated>
       <workItem from="1550211467448" duration="1324000" />
       <workItem from="1550823874003" duration="39875000" />
-      <workItem from="1551095921998" duration="20917000" />
+      <workItem from="1551095921998" duration="21293000" />
     </task>
     <task id="LOCAL-00001" summary="feat: init web">
       <created>1550824309198</created>
@@ -549,11 +530,39 @@
       <option name="project" value="LOCAL" />
       <updated>1551177468195</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="feat(server): cache tags">
+      <created>1551181717921</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1551181717922</updated>
+    </task>
+    <task id="LOCAL-00027" summary="feat(web): fix url">
+      <created>1551181729323</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1551181729323</updated>
+    </task>
+    <task id="LOCAL-00028" summary="chore">
+      <created>1551181741495</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1551181741495</updated>
+    </task>
+    <task id="LOCAL-00029" summary="doc:">
+      <created>1551181750694</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1551181750694</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="62116000" />
+    <option name="totallyTimeSpent" value="62492000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1680" height="960" extended-state="0" />
@@ -568,7 +577,7 @@
       <window_info anchor="bottom" id="Message" order="1" />
       <window_info anchor="bottom" id="GraphQL" order="2" weight="0.32718894" />
       <window_info anchor="bottom" id="Find" order="3" weight="0.3298969" />
-      <window_info anchor="bottom" id="Run" order="4" visible="true" weight="0.328341" />
+      <window_info anchor="bottom" id="Run" order="4" weight="0.328341" />
       <window_info anchor="bottom" id="Debug" order="5" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="6" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="7" weight="0.4" />
@@ -577,7 +586,7 @@
       <window_info anchor="bottom" id="Docker" order="10" weight="0.32949308" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.50117093" side_tool="true" weight="0.328341" />
       <window_info anchor="bottom" id="Database Changes" order="12" />
-      <window_info anchor="bottom" id="Version Control" order="13" sideWeight="0.49882904" weight="0.328341" />
+      <window_info anchor="bottom" id="Version Control" order="13" sideWeight="0.49882904" visible="true" weight="0.328341" />
       <window_info anchor="bottom" id="Flutter Performance" order="14" side_tool="true" />
       <window_info anchor="bottom" id="Flow" order="15" weight="0.32911393" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -684,7 +693,6 @@
     <MESSAGE value="feat(server): subscribe articleAdded" />
     <MESSAGE value="build: fix warning" />
     <MESSAGE value="feat(web): init" />
-    <MESSAGE value="chore" />
     <MESSAGE value="doc" />
     <MESSAGE value="build(server): docker" />
     <MESSAGE value="feat(spider): init" />
@@ -697,16 +705,13 @@
     <MESSAGE value="feat(web): view by tag" />
     <MESSAGE value="doc: doker-compose &amp; doc" />
     <MESSAGE value="chore:" />
-    <option name="LAST_COMMIT_MESSAGE" value="chore:" />
+    <MESSAGE value="feat(server): cache tags" />
+    <MESSAGE value="feat(web): fix url" />
+    <MESSAGE value="chore" />
+    <MESSAGE value="doc:" />
+    <option name="LAST_COMMIT_MESSAGE" value="doc:" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/spider/node_modules/graphql-tag/src/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="186">
-          <caret line="151" column="9" selection-start-line="151" selection-start-column="9" selection-end-line="151" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/spider/node_modules/apollo-client/ApolloClient.d.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="193">
@@ -944,13 +949,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/web/src/Feed.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="14" column="22" selection-start-line="14" selection-start-column="22" selection-end-line="14" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/server/test.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="216">
@@ -1009,16 +1007,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="FIRST">
-          <first_editor relative-caret-position="272">
-            <caret line="35" column="9" lean-forward="true" selection-start-line="35" selection-start-column="9" selection-end-line="35" selection-end-column="9" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/web/src/components/ArticleListContainer.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-666">
@@ -1056,10 +1044,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="80" selection-start-column="80" selection-end-column="80" />
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="FIRST">
+          <first_editor relative-caret-position="362">
+            <caret line="43" lean-forward="true" selection-start-line="43" selection-end-line="43" />
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
     </entry>
@@ -1075,11 +1066,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/web/src/App.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="233">
-          <caret line="21" column="58" lean-forward="true" selection-start-line="21" selection-start-column="58" selection-end-line="21" selection-end-column="58" />
+        <state relative-caret-position="251">
+          <caret line="24" column="50" selection-start-line="24" selection-start-column="50" selection-end-line="24" selection-end-column="50" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="80" selection-start-column="80" selection-end-column="80" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web/src/Feed.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="22" column="8" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/web/src/components/FeedList.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="4" column="75" selection-start-line="4" selection-start-column="75" selection-end-line="4" selection-end-column="75" />
         </state>
       </provider>
     </entry>
