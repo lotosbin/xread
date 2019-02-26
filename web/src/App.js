@@ -15,7 +15,7 @@ class App extends Component {
                 <Router>
                     <div className="App">
                         <div className={styles.nav}>
-                            <div className={styles.nav_item}><Link to="/">Home</Link></div>
+                            <div className={styles.nav_item}><Link to="/article">Home</Link></div>
                             <div className={styles.nav_item}><Link to="/feed">Feed</Link></div>
                             <div className={styles.nav_item}><Link to="/tag">Tag</Link></div>
                         </div>
