@@ -123,9 +123,6 @@ export async function getAllTags(): Array<string> {
 
 async function addArticleKeywords(id: string, tags: Array<string>) {
     console.log(`addArticleKeywords:id=${id},tags=${tags.join(",")}`);
-    if (!(tags && tags.length)) {
-        return;
-    }
     let database;
     try {
         database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
@@ -140,7 +137,7 @@ async function addArticleKeywords(id: string, tags: Array<string>) {
 
 export async function parseArticleKeywords(article) {
     const result: TKeywordResult = await keyword(article.summary || "", article.title || "");
-    if (result.items && result.items.length) {
+    if (result.items) {
         let tags: Array<string> = result.items.map(it => it.tag);
         await addArticleKeywords(article.id, tags);
         return tags;

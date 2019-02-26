@@ -109,7 +109,7 @@ const resolvers = {
             return getFeed(id)
         },
         tags: async (article,) => {
-            if (article.tags && article.tags.length) {
+            if (article.tags) {
                 return article.tags;
             }
             try {
