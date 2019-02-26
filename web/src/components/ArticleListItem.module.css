@@ -12,3 +12,15 @@
 .summary {
     text-align: start;
 }
+
+.tags {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.tag {
+    padding: 8px;
+    word-break: keep-all;
+}

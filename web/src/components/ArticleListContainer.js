@@ -5,7 +5,7 @@ import ArticleList from "./ArticleList";
 
 const ArticleListContainer = () => <Query
     query={gql`query articles($cursor: String) {
-    articles(last:100,before: $cursor) {
+    articles(last:10,before: $cursor) {
         pageInfo{
             startCursor
             endCursor
@@ -20,6 +20,7 @@ const ArticleListContainer = () => <Query
                 summary
                 link
                 time
+                tags
             }
         }
     }
