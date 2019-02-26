@@ -38,6 +38,10 @@ desktop ----+                                          |             parse keywo
 
 # deploy
 
+```bash
+git clone --depth 1 https://github.com/lotosbin/xread.git
+```
+
 docker-compose.yml
 replace server ip in service web environment
 ```bash
