@@ -1,0 +1,11 @@
+{
+  "name": "xread",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:lotosbin/xread.git",
+  "author": "lotosbin <lotosbin@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "flow-bin": "^0.93.0"
+  }
+}
