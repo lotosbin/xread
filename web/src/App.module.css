@@ -1,0 +1,9 @@
+.nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.nav_item {
+    margin: 8px;
+}

@@ -10,7 +10,7 @@ const ArticleList = ({data: articles, loadMore}) => <div className={styles.conta
         loader={<div className="loader" key={0}>Loading ...</div>}
         useWindow={false}
     >
-        {articles.map((article) => <ArticleListItem data={article}/>)}
+        {articles.map((article) => <ArticleListItem key={article.id} data={article}/>)}
     </InfiniteScroll>
 
     <div onClick={loadMore}>More

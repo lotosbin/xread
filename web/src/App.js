@@ -1,29 +1,26 @@
 import React, {Component} from 'react';
-
 import './App.css';
-import {ApolloProvider, Subscription} from "react-apollo";
+import {ApolloProvider} from "react-apollo";
 import client from './apollo/client';
-import ArticleListContainer from "./components/ArticleListContainer";
-import gql from "graphql-tag";
+import {HashRouter as Router, Route, Link} from "react-router-dom";
+import Home from "./Home";
+import Feed from "./Feed";
+import styles from "./App.module.css";
 
 class App extends Component {
     render() {
         return (
             <ApolloProvider client={client}>
-                <div className="App">
-                    <Subscription subscription={gql`subscription {
-    articleAdded {
-        id
-        title
-        summary
-        link
-        time
-    }
-}`}>
-                        {({data: {articleAdded} = {}, loading}) => articleAdded ? <h4>New article: {!loading && articleAdded.title}</h4> : null}
-                    </Subscription>
-                    <ArticleListContainer/>
-                </div>
+                <Router>
+                    <div className="App">
+                        <div className={styles.nav}>
+                            <div className={styles.nav_item}><Link to="/">Home</Link></div>
+                            <div className={styles.nav_item}><Link to="/feed">Feed</Link></div>
+                        </div>
+                        <Route exact path="/" component={Home}/>
+                        <Route path="/feed" component={Feed}/>
+                    </div>
+                </Router>
             </ApolloProvider>
         );
     }
