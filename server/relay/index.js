@@ -1,8 +1,9 @@
 import _ from "lodash";
 
 export function makeConnection(getArticles) {
-    return async ({first, after, last, before}) => {
-        const articles = await getArticles({first: first + 1, after, last, before});
+    return async (args) => {
+        let {first, after, last, before} = args;
+        const articles = await getArticles({...args, first: first + 1});
         let edges = articles.slice(0, first).map(it => ({cursor: it.id, node: it}));
         return {
             pageInfo: {
