@@ -1,5 +1,10 @@
 import {addArticle, addFeed, getArticles, getFeed, getFeeds, getTags, parseArticleKeywords} from "./service";
 import {makeConnection} from "./relay";
+import {makeExecutableSchema, addMockFunctionsToSchema, mergeSchemas} from "graphql-tools";
+import {createStoreSchema} from "./store";
+// Mocked chirp schema; we don't want to worry about schema implementation
+// right now since we're just demonstrating schema stitching
+
 
 const {ApolloServer, gql, PubSub} = require('apollo-server');
 const pubsub = new PubSub();
@@ -13,15 +18,22 @@ const FEED_ADDED = "FEED_ADDED";
 const resolvers = {
     Node: {
         __resolveType: (obj, context, info) => {
+            if (obj.__type) return obj.__type;
             if (obj.name) {
                 return "Tag"
+            } else if (obj.title) {
+                if (obj.summary) {
+                    return "Article"
+                } else {
+                    return "Feed"
+                }
             }
             return null
         }
     },
     Tag: {
         articles: async (parent, args, context) => {
-            console.log(`Tag,parent=${JSON.stringify(parent)}`)
+            console.log(`Tag,parent=${JSON.stringify(parent)}`);
             return await makeConnection(getArticles)({...args, tag: parent.id});
         },
     },
@@ -49,9 +61,15 @@ const resolvers = {
         articles: async (parent, args, context) => await makeConnection(getArticles)(args),
         feeds: async (parent, args, context) => await makeConnection(getFeeds)(args),
         tags: async (parent, args, context) => await makeConnection(getTags)(args),
-        node: async (parent, args, context) => {
-            if (args.id)
-                return ({id: args.id, name: args.id});
+        node: async (parent, {id}, context) => {
+            const feed = await getFeed(id);
+            if (feed) {
+                feed.id = feed._id;
+                feed.__type = "Feed";
+                return feed;
+            }
+            if (id)
+                return ({id: id, name: id, __type: "Tag"});
             else
                 return null
         },
@@ -79,14 +97,26 @@ const resolvers = {
         },
     },
 };
-
-// In the most basic sense, the ApolloServer can be started
-// by passing type definitions (typeDefs) and the resolvers
-// responsible for fetching the data for those types.
-const server = new ApolloServer({typeDefs, resolvers});
-
-// This `listen` method launches a web-server.  Existing apps
-// can utilize middleware options, which we'll discuss later.
-server.listen().then(({url}) => {
-    console.log(`🚀  Server ready at ${url}`);
+export const serverSchema = makeExecutableSchema({
+    typeDefs,
+    resolvers,
 });
+(async () => {
+    let port, schema;
+    if (process.env.STORE) {
+        schema = mergeSchemas({
+            schemas: [serverSchema],
+        });
+        port = 4001;
+    } else {
+        const storeSchema = await createStoreSchema();
+        schema = mergeSchemas({
+            schemas: [serverSchema, storeSchema],
+        });
+        port = 4000;
+    }
+    const server = new ApolloServer({schema: schema});
+    server.listen({port: port}).then(({url}) => {
+        console.log(`🚀  Server ready at ${url}`);
+    });
+})();

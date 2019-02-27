@@ -1,8 +1,8 @@
-schema {
-    query: Query
-    mutation: Mutation
-    subscription:Subscription
-}
+#schema {
+#    query: Query
+#    mutation: Mutation
+#    subscription:Subscription
+#}
 
 interface Node {
     id: ID!
