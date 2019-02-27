@@ -4,87 +4,8 @@ import {makeConnection} from "./relay";
 const {ApolloServer, gql, PubSub} = require('apollo-server');
 const pubsub = new PubSub();
 
-// Type definitions define the "shape" of your data and specify
-// which ways the data can be fetched from the GraphQL server.
-const typeDefs = gql`# Comments in GraphQL are defined with the hash (#) symbol.
-interface Node {
-    id: ID!
-}
-type PageInfo {
-    startCursor: String!,
-    endCursor: String!,
-    hasNextPage: Boolean!,
-    hasPreviousPage: Boolean!
-}
-type Viewer{
-    username: String
-}
-type Tag implements Node{
-    id:ID!
-    name: String!
-    articles(first:Int,after:String,last:Int,before:String):ArticleConnection
-}
-type TagConnection {
-    pageInfo: PageInfo!
-    edges: [TagEdge!]!
-}
-type TagEdge  {
-    cursor: String!
-    node: Tag!
-}
-type Article implements Node {
-    id: ID!
-    title: String
-    summary: String
-    link: String
-    time: String
-    feed: Feed
-    tags: [String]
-}
-
-type ArticleConnection {
-    pageInfo: PageInfo!
-    edges: [ArticleEdge!]!
-}
-type ArticleEdge  {
-    cursor: String!
-    node: Article!
-}
-
-type Feed implements Node{
-    id:ID!
-    link:String!
-    title:String
-    articles(first:Int,after:String,last:Int,before:String):ArticleConnection
-}
-type FeedConnection {
-    pageInfo: PageInfo!
-    edges: [FeedEdge!]!
-}
-type FeedEdge  {
-    cursor: String!
-    node: Feed!
-}
-
-# The "Query" type is the root of all GraphQL queries.
-# (A "Mutation" type will be covered later on.)
-type Query {
-    articles(first:Int,after:String,last:Int,before:String): ArticleConnection
-    viewer: Viewer
-    node(id: ID!): Node
-    feeds(first:Int,after:String,last:Int,before:String):FeedConnection
-    tags:TagConnection
-}
-type Mutation {
-    addArticle(title: String, summary: String,link:String,time:String,feedId:String):Article
-    addFeed(link:String!,title:String):Feed
-}
-type Subscription {
-    articleAdded: Article
-    feedAdded:Feed
-}
-
-`;
+const fs = require('fs');
+const typeDefs = gql`${fs.readFileSync(__dirname.concat('/schema.graphql'), 'utf8')}`;
 const ARTICLE_ADDED = "ARTICLE_ADDED";
 const FEED_ADDED = "FEED_ADDED";
 // Resolvers define the technique for fetching the types in the
