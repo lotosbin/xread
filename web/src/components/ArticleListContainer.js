@@ -21,6 +21,10 @@ const ArticleListContainer = () => <Query
                 link
                 time
                 tags
+                feed{
+                    title
+                    link
+                }
             }
         }
     }
