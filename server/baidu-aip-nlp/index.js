@@ -69,7 +69,7 @@ export type TKeywordResult = {
 };
 
 function trim(str: string) {
-    return (str || "").replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?]/g, "");
+    return (str || "").replace(/<[^>]+>/g, "").replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?]/g, "");
 }
 
 //ref: https://ai.baidu.com/docs#/NLP-API/a1dae901
@@ -77,7 +77,7 @@ function trim(str: string) {
  * @param title    string    文章标题（GBK编码），最大80字节    必填
  * @param content    string    文章内容（GBK编码），最大65535字节    必填
  */
-export async function keyword(content: string, title: string): Promise<TKeywordResult> {
+export async function keyword(content: string = "", title: string = ""): Promise<TKeywordResult> {
     try {
         // 调用文章标签
         let trimTitle = trim(title);

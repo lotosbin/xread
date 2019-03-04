@@ -38,6 +38,9 @@ const resolvers = {
         },
     },
     Article: {
+        summary: ({summary = ""}) => {
+            return summary.replace(/<[^>]+>/g, "")
+        },
         feed: ({id}, args, {}) => {
             return getFeed(id)
         },
