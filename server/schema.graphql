@@ -29,6 +29,19 @@ type TagEdge  {
     cursor: String!
     node: Tag!
 }
+type Topic implements Node{
+    id:ID!
+    name:String!
+    articles(first:Int,after:String,last:Int,before:String):ArticleConnection
+}
+type TopicConnection {
+    pageInfo: PageInfo!
+    edges: [TopicEdge!]!
+}
+type TopicEdge  {
+    cursor: String!
+    node: Topic!
+}
 type Article implements Node {
     id: ID!
     title: String
@@ -37,6 +50,7 @@ type Article implements Node {
     time: String
     feed: Feed
     tags: [String]
+    topic: String
 }
 
 type ArticleConnection {
@@ -68,9 +82,10 @@ type FeedEdge  {
 type Query {
     articles(first:Int,after:String,last:Int,before:String): ArticleConnection
     viewer: Viewer
-    node(id: ID!): Node
+    node(id: ID!,type:String): Node
     feeds(first:Int,after:String,last:Int,before:String):FeedConnection
     tags:TagConnection
+    topics:TopicConnection
 }
 type Mutation {
     addArticle(title: String, summary: String,link:String,time:String,feedId:String):Article

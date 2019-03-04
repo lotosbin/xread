@@ -33,7 +33,7 @@ export async function newsSummary(content: string, title: string): Promise<TNews
     }
 }
 
-type TTopicResult = {
+export type TTopicResult = {
     "log_id": number,
     "item": {
         "lv2_tag_list": [{
@@ -47,10 +47,21 @@ type TTopicResult = {
     }
 };
 
+/**
+ * @ref //ref: https://ai.baidu.com/docs#/NLP-API/3e14446d
+ * */
 export async function topic(content: string, title: string): Promise<TTopicResult> {
     // 调用文章分类
     try {
-        var result = await client.topic(title, content);
+        let trimTitle = trim(title);
+        let trimContent = trim(content);
+        if (trimTitle.length > 80) {
+            console.warn(`title>80:trimTitle=${trimTitle},title=${title}`)
+        }
+        if (trimContent.length > 65535) {
+            console.warn(`content>65535:trimContent=${trimContent},content=${content}`)
+        }
+        const result = await client.topic(trimTitle.slice(0, 80), trimContent.slice(0, 65535));
         console.log(JSON.stringify(result));
         return result;
     } catch (err) {
@@ -72,12 +83,13 @@ function trim(str: string) {
     return (str || "").replace(/<[^>]+>/g, "").replace(/[\ |\~|\`|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-|\_|\+|\=|\||\\|\[|\]|\{|\}|\;|\:|\"|\'|\,|\<|\.|\>|\/|\?]/g, "");
 }
 
+
 //ref: https://ai.baidu.com/docs#/NLP-API/a1dae901
 /**
  * @param title    string    文章标题（GBK编码），最大80字节    必填
  * @param content    string    文章内容（GBK编码），最大65535字节    必填
  */
-export async function keyword(content: string = "", title: string = ""): Promise<TKeywordResult> {
+export async function keyword(content: string = "", title: string = ""): Promise<TCategoryResult> {
     try {
         // 调用文章标签
         let trimTitle = trim(title);

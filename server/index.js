@@ -1,4 +1,4 @@
-import {addArticle, addFeed, getArticles, getFeed, getFeeds, getTags, parseArticleKeywords} from "./service";
+import {addArticle, addFeed, getArticles, getFeed, getFeeds, getTags, getTopics, parseArticleKeywords} from "./service";
 import {makeConnection} from "./relay";
 import {makeExecutableSchema, addMockFunctionsToSchema, mergeSchemas} from "graphql-tools";
 import {createStoreSchema} from "./store";
@@ -37,6 +37,12 @@ const resolvers = {
             return await makeConnection(getArticles)({...args, tag: parent.id});
         },
     },
+    Topic: {
+        articles: async (parent, args, context) => {
+            console.log(`Topic,parent=${JSON.stringify(parent)}`);
+            return await makeConnection(getArticles)({...args, topic: parent.id});
+        },
+    },
     Article: {
         summary: ({summary = ""}) => {
             return summary.replace(/<[^>]+>/g, "")
@@ -64,15 +70,34 @@ const resolvers = {
         articles: async (parent, args, context) => await makeConnection(getArticles)(args),
         feeds: async (parent, args, context) => await makeConnection(getFeeds)(args),
         tags: async (parent, args, context) => await makeConnection(getTags)(args),
-        node: async (parent, {id}, context) => {
-            const feed = await getFeed(id);
-            if (feed) {
-                feed.id = feed._id;
-                feed.__type = "Feed";
-                return feed;
+        topics: async (parent, args, context) => await makeConnection(getTopics)(args),
+        node: async (parent, {id, type}, context) => {
+            if (type) {
+                switch (type) {
+                    case "Feed":
+                        const feed = await getFeed(id);
+                        if (feed) {
+                            feed.id = feed._id;
+                            feed.__type = "Feed";
+                            return feed;
+                        }
+                        break;
+                    case "Tag":
+                        return ({id: id, name: id, __type: type || "Tag"});
+                    case "Topic":
+                        return ({id: id, name: id, __type: type || "Topic"});
+                }
+            }
+            if (!(type && type !== "Feed")) {
+                const feed = await getFeed(id);
+                if (feed) {
+                    feed.id = feed._id;
+                    feed.__type = "Feed";
+                    return feed;
+                }
             }
             if (id)
-                return ({id: id, name: id, __type: "Tag"});
+                return ({id: id, name: id, __type: type || "Tag"});
             else
                 return null
         },

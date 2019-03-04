@@ -1,12 +1,12 @@
 // @flow
 import {MongoClient, ObjectId} from "mongodb";
 import assert from "assert";
-import {keyword} from "./baidu-aip-nlp";
-import type {TKeywordResult} from "./baidu-aip-nlp";
+import {keyword, topic} from "./baidu-aip-nlp";
+import type {TKeywordResult, TTopicResult} from "./baidu-aip-nlp";
 
 export let mongoConnectionString = process.env.MONGO;
 
-export async function getFeed(id) {
+export async function getFeed(id: string) {
     const database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
     const result = await database.db("xread").collection("feed").findOne({_id: new ObjectId(id)});
     await database.close();
@@ -18,7 +18,7 @@ export async function getFeeds({first, after, last, before}) {
     return await getList("feed", {first, after, last, before})
 }
 
-export async function addFeed({link, title}) {
+export async function addFeed({link, title}: { link: string, title: string }) {
     let database;
     try {
         database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
@@ -42,7 +42,7 @@ export async function addFeed({link, title}) {
 
 export async function getArticles(args) {
     console.log(`getArticles:args=${JSON.stringify(args)}`)
-    let {first, after, last, before, feedId, tag} = args;
+    let {first, after, last, before, feedId, tag, topic} = args;
     assert(!!first || !!last, "first or last should grate then 0");
     assert(!(!!first && !!last), 'first or last cannot set same time');
     const database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
@@ -69,6 +69,9 @@ export async function getArticles(args) {
     if (tag) {
         query.tags = tag;
     }
+    if (topic) {
+        query.topic = topic;
+    }
     const result = await database.db("xread").collection("article").find(query).sort(sort).limit(limit).toArray();
     await database.close();
     result.forEach(it => it.id = it._id.toString());
@@ -89,6 +92,7 @@ export async function addArticle({link, title, summary, time, feedId}) {
         if (result) {
             result.id = result._id.toString();
             // parseArticleKeywords(result).catch(error => console.error(error));
+            parseArticleTopic(result)
         }
         return result;
     } catch (e) {
@@ -101,16 +105,36 @@ export async function addArticle({link, title, summary, time, feedId}) {
     }
 }
 
-export async function getTags(): { id: string, name: string } {
+export async function getTags(): Promise<Array<{ id: string, name: string }>> {
     var allTags = await getAllTags();
     return allTags.map(it => ({id: it, name: it}));
 }
 
-export async function getAllTags(): Array<string> {
+export async function getTopics(): Promise<Array<{ id: string, name: string }>> {
+    var allTopics = await getAllTopics();
+    return allTopics.map(it => ({id: it, name: it}));
+}
+
+export async function getAllTags(): Promise<Array<string>> {
     let database;
     try {
         database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
         const response = await database.db("xread").collection("article").distinct("tags");
+        return response || [];
+    } catch (e) {
+        return [];
+    } finally {
+        if (database) {
+            await database.close();
+        }
+    }
+}
+
+export async function getAllTopics(): Promise<Array<string>> {
+    let database;
+    try {
+        database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
+        const response = await database.db("xread").collection("article").distinct("topic");
         return response || [];
     } catch (e) {
         return [];
@@ -135,6 +159,20 @@ async function addArticleKeywords(id: string, tags: Array<string>) {
     }
 }
 
+async function addArticleTopic(id: string, tag: string) {
+    console.log(`addArticleTopic:id=${id},tag=${tag}`);
+    let database;
+    try {
+        database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
+        let update = {$set: {topic: tag}};
+        const response = await database.db("xread").collection("article").updateOne({_id: new ObjectId(id)}, update);
+    } finally {
+        if (database) {
+            await database.close();
+        }
+    }
+}
+
 export async function parseArticleKeywords(article) {
     const result: TKeywordResult = await keyword(article.summary || "", article.title || "");
     if (result.items) {
@@ -144,6 +182,22 @@ export async function parseArticleKeywords(article) {
     }
     return []
 }
+
+export async function parseArticleTopic(article): Promise<string | null> {
+    try {
+        const result: TTopicResult = await topic(article.summary || "", article.title || "");
+        if (result.item && result.item.lv1_tag_list && result.item.lv1_tag_list.length) {
+            const tag: string = result.item.lv1_tag_list[0].tag;
+            await addArticleTopic(article.id, tag);
+            return tag;
+        }
+        return null
+    } catch (e) {
+        console.error(e);
+        return null
+    }
+}
+
 
 export async function getList(collectionName: String, {first, after, last, before}) {
     assert(!!first || !!last, "first or last should grate then 0");
