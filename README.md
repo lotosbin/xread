@@ -1,4 +1,7 @@
 # xread
+
+[![Join the chat at https://gitter.im/yuanjing-xread/community](https://badges.gitter.im/yuanjing-xread/community.svg)](https://gitter.im/yuanjing-xread/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 another rss reader
 react react-native graphql rss reader
 
