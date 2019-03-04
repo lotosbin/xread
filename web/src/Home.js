@@ -4,6 +4,7 @@ import gql from "graphql-tag";
 import ArticleListContainer from "./components/ArticleListContainer";
 import {Route} from "react-router-dom";
 import TagArticleListContainer from "./components/TagArticleListContainer";
+import TopicArticleListContainer from "./components/TopicArticleListContainer";
 
 const Home = () => {
     return <div>
@@ -21,6 +22,7 @@ const Home = () => {
         </Subscription>
         <Route exact path="/article" component={ArticleListContainer}/>
         <Route path="/article/tag/:tag" component={TagArticleListContainer}/>
+        <Route path="/article/topic/:tag" component={TopicArticleListContainer}/>
     </div>
 };
 export default Home;
