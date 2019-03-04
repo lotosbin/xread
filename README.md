@@ -2,6 +2,8 @@
 another rss reader
 react react-native graphql rss reader
 
+qq群: 631376463
+
 # DEV
 
 - mongo
