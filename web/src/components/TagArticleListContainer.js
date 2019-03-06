@@ -1,3 +1,4 @@
+// @flow
 import {Query} from "react-apollo";
 import gql from "graphql-tag";
 import React from "react";
@@ -5,7 +6,7 @@ import ArticleList from "./ArticleList";
 
 const TagArticleListContainer = ({match: {params: {tag}}}) => <Query
     query={gql`query tag_articles($tag:ID!,$cursor: String) {
-    node(id:$tag){
+    node(id:$tag,type:"Tag"){
         id
         ... on Tag{
             name
@@ -35,7 +36,7 @@ const TagArticleListContainer = ({match: {params: {tag}}}) => <Query
     `}
     variables={{tag: tag, cursor: null}}
 >
-    {({loading, error, data: {node}, fetchMore, refetch}) => {
+    {({loading, error, data: {node = {}} = {}, fetchMore, refetch}) => {
         if (loading) return <p>Loading...</p>;
         if (error) return <p>Error :(</p>;
         let {articles} = node || {};
