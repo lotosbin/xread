@@ -22,7 +22,11 @@ services:
     links:
       - server:server
   web:
-    build: ./web
+    build:
+      context: ./web
+      args:
+        REACT_APP_API_URL: http://192.168.43.211:4000/graphql
+        REACT_APP_WEBSOCKET_URL: ws://192.168.43.211:4000/graphql
     environment:
       - REACT_APP_API_URL=http://192.168.43.211:5000/graphql
       - REACT_APP_WEBSOCKET_URL=ws://192.168.43.211:5000/graphql
