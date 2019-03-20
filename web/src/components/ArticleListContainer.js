@@ -1,11 +1,13 @@
-import {Query} from "react-apollo";
+import {Mutation} from "react-apollo";
 import gql from "graphql-tag";
 import React from "react";
 import ArticleList from "./ArticleList";
+import _ from "lodash";
+import {useMutation, useQuery} from "react-apollo-hooks";
+import queryString from "query-string";
 
-const ArticleListContainer = () => <Query
-    query={gql`query articles($cursor: String) {
-    articles(last:10,before: $cursor) {
+let query = gql`query articles($cursor: String="",$box:String="all",$read:String="all") {
+    articles(last:10,before: $cursor,box:$box,read:$read) {
         pageInfo{
             startCursor
             endCursor
@@ -29,16 +31,61 @@ const ArticleListContainer = () => <Query
         }
     }
 }
-    `}
-    variables={{cursor: null}}
->
-    {({loading, error, data: {articles}, fetchMore, refetch}) => {
-        if (loading) return <p>Loading...</p>;
-        if (error) return <p>Error :(</p>;
+`;
+let mutationMarkSpam = gql`mutation markSpam($id:String) {
+    markSpam(id:$id){
+        id
+    }
+}
+`;
+let mutationMarkRead = gql`mutation markRead($id:String) {
+    markReaded(id:$id){
+        id
+    }
+}
+`;
+const ArticleListContainer = ({location: {search}, match: {params: {box = "all"}}}) => {
 
-        return <div>
-            <div onClick={() => refetch()}>refetch</div>
-            <ArticleList data={articles.edges.map(it => it.node)} loadMore={() => fetchMore({
+    const markSpam = useMutation(mutationMarkSpam);
+    const markRead = useMutation(mutationMarkRead);
+    let {read = "all"} = queryString.parse(search);
+    let variables = {cursor: "", box: box, read: read};
+    const {data: {articles}, fetchMore, refetch, loading, error} = useQuery(query, variables);
+    if (loading) return (<p>Loading...</p>);
+    if (error) return (<p>Error !!!</p>);
+    return <div>
+        <div onClick={() => refetch()}>refetch</div>
+        <ArticleList
+            data={articles.edges.map(it => it.node)}
+            header={({id}) => <div>
+                {box === "inbox" ? <span onClick={() => markSpam({
+                    variables: {id: id},
+                    optimisticResponse: {
+                        __typename: "Mutation",
+                        markSpam: {
+                            __typename: "Article",
+                            id: id,
+                        }
+                    },
+                    update: (proxy, {data: {markSpam: {id}}}) => {
+                        console.log(`update:${id}`);
+                        // Read the data from our cache for this query.
+                        const data = proxy.readQuery({query: query, variables: variables});
+                        console.log(`data`);
+                        console.dir(data);
+                        // Add our comment from the mutation to the end.
+                        const find = _.find(data.articles.edges || [], {node: {id: id}});
+                        if (find) {
+                            console.log(`find`);
+                            data.articles.edges = _.without(data.articles.edges || [], find) || [];
+                            // Write our data back to the cache.
+                            proxy.writeQuery({query: query, data});
+                        }
+                    }
+                })}>Spam</span> : null}
+                <span onClick={() => markRead({variables: {id: id}})}>mark read</span>
+            </div>}
+            loadMore={() => fetchMore({
                 variables: {
                     cursor: articles.pageInfo.endCursor
                 },
@@ -58,8 +105,9 @@ const ArticleListContainer = () => <Query
                         }
                         : previousResult;
                 }
-            })}/>
-        </div>;
-    }}
-</Query>;
+            })}
+        />
+
+    </div>;
+};
 export default ArticleListContainer;

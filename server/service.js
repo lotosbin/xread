@@ -42,7 +42,7 @@ export async function addFeed({link, title}: { link: string, title: string }) {
 
 export async function getArticles(args) {
     console.log(`getArticles:args=${JSON.stringify(args)}`)
-    let {first, after, last, before, feedId, tag, topic} = args;
+    let {first, after, last, before, feedId, tag, topic, box, read = "all"} = args;
     assert(!!first || !!last, "first or last should grate then 0");
     assert(!(!!first && !!last), 'first or last cannot set same time');
     const database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
@@ -72,6 +72,26 @@ export async function getArticles(args) {
     if (topic) {
         query.topic = topic;
     }
+    switch (box) {
+        case "inbox":
+            query.spam = {$ne: true};
+            break;
+        case "spam":
+            query.spam = true;
+            break;
+        default:
+            break;
+    }
+    switch (read) {
+        case "unread":
+            query.read = {$ne: true};
+            break;
+        case "readed":
+            query.read = true;
+            break;
+        default:
+            break;
+    }
     const result = await database.db("xread").collection("article").find(query).sort(sort).limit(limit).toArray();
     await database.close();
     result.forEach(it => it.id = it._id.toString());
@@ -98,6 +118,44 @@ export async function addArticle({link, title, summary, time, feedId}) {
     } catch (e) {
         console.log(e.message);
         return null;
+    } finally {
+        if (database) {
+            await database.close();
+        }
+    }
+}
+
+export async function readArticle({id}) {
+    let database;
+    try {
+        database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
+        let filter = {_id: new ObjectId(id)};
+        let update = {$set: {read: true}};
+        const response = await database.db("xread").collection("article").updateOne(filter, update);
+        const result = await database.db("xread").collection("article").findOne(filter);
+        if (result) {
+            result.id = result._id.toString();
+        }
+        return result;
+    } finally {
+        if (database) {
+            await database.close();
+        }
+    }
+}
+
+export async function markArticleSpam({id}) {
+    let database;
+    try {
+        database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
+        let filter = {_id: new ObjectId(id)};
+        let update = {$set: {spam: true}};
+        const response = await database.db("xread").collection("article").updateOne(filter, update);
+        const result = await database.db("xread").collection("article").findOne(filter);
+        if (result) {
+            result.id = result._id.toString();
+        }
+        return result;
     } finally {
         if (database) {
             await database.close();

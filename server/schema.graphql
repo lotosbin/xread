@@ -80,7 +80,7 @@ type FeedEdge  {
 # The "Query" type is the root of all GraphQL queries.
 # (A "Mutation" type will be covered later on.)
 type Query {
-    articles(first:Int,after:String,last:Int,before:String): ArticleConnection
+    articles(first:Int,after:String,last:Int,before:String,box:String,read:String="all"): ArticleConnection
     viewer: Viewer
     node(id: ID!,type:String): Node
     feeds(first:Int,after:String,last:Int,before:String):FeedConnection
@@ -90,6 +90,8 @@ type Query {
 type Mutation {
     addArticle(title: String, summary: String,link:String,time:String,feedId:String):Article
     addFeed(link:String!,title:String):Feed
+    markReaded(id:String):Article
+    markSpam(id:String):Article
 }
 type Subscription {
     articleAdded: Article

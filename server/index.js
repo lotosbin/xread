@@ -1,4 +1,4 @@
-import {addArticle, addFeed, getArticles, getFeed, getFeeds, getTags, getTopics, parseArticleKeywords} from "./service";
+import {addArticle, addFeed, getArticles, getFeed, getFeeds, getTags, getTopics, markArticleSpam, parseArticleKeywords, readArticle} from "./service";
 import {makeConnection} from "./relay";
 import {makeExecutableSchema, addMockFunctionsToSchema, mergeSchemas} from "graphql-tools";
 import {createStoreSchema} from "./store";
@@ -113,6 +113,14 @@ const resolvers = {
             pubsub.publish(FEED_ADDED, {feedAdded: feed});
             return feed;
         },
+        markReaded: async (root, args, context) => {
+            const article = await readArticle(args);
+            return article;
+        },
+        markSpam: async (root, args, context) => {
+            const article = await markArticleSpam(args);
+            return article;
+        },
     },
     Subscription: {
         articleAdded: {
@@ -122,7 +130,7 @@ const resolvers = {
         feedAdded: {
             // Additional event labels can be passed to asyncIterator creation
             subscribe: () => pubsub.asyncIterator([FEED_ADDED]),
-        },
+        }
     },
 };
 export const serverSchema = makeExecutableSchema({
