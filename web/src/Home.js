@@ -7,16 +7,16 @@ import TagArticleListContainer from "./components/TagArticleListContainer";
 import TopicArticleListContainer from "./components/TopicArticleListContainer";
 import styles from "./Home.module.css"
 import queryString from 'query-string';
+import SibeBar from "./components/SibeBar";
 
 const Home = ({location: {pathname, search}}) => {
 
-    return <div style={{display: "flex", flexDirection: "row"}}>
+    return <div style={{display: "flex", flexDirection: "row", width: '100%'}}>
         <div className={styles.nav}>
-            <Link to={'/article/box/all'}>All</Link>
-            <Link to={'/article/box/inbox'}>Inbox</Link>
-            <Link to={'/article/box/spam'}>Spam</Link>
+            <SibeBar/>
+
         </div>
-        <div>
+        <div style={{flexGrow: 1}}>
             <Subscription subscription={gql`subscription {
     articleAdded {
         id
@@ -33,6 +33,7 @@ const Home = ({location: {pathname, search}}) => {
                 <Link to={`?read=all`}>All</Link>
                 <Link to={`?read=unread`}>Unread Only</Link>
             </div>
+
             <Route exact path="/article" component={ArticleListContainer}/>
             <Route path="/article/box/:box" component={ArticleListContainer}/>
             <Route path="/article/box/:box/read/:read" component={ArticleListContainer}/>

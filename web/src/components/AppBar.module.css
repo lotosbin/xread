@@ -1,0 +1,10 @@
+.nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-grow: 1;
+}
+
+.nav_item {
+    margin: 8px;
+}

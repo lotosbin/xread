@@ -10,6 +10,7 @@ import Tag from "./Tag";
 import Store from "./Store";
 import Topic from "./Topic";
 import {ApolloProvider as ApolloHooksProvider} from 'react-apollo-hooks';
+import AppBar from './components/AppBar'
 
 class App extends Component {
     render() {
@@ -18,13 +19,7 @@ class App extends Component {
                 <ApolloHooksProvider client={client}>
                     <Router>
                         <div className="App">
-                            <div className={styles.nav}>
-                                <div className={styles.nav_item}><Link to="/article">Home</Link></div>
-                                <div className={styles.nav_item}><Link to="/feed">Feed</Link></div>
-                                <div className={styles.nav_item}><Link to="/topic">Topic</Link></div>
-                                <div className={styles.nav_item}><Link to="/tag">Tag</Link></div>
-                                <div className={styles.nav_item}><Link to="/store">Store</Link></div>
-                            </div>
+                            <AppBar/>
                             <Route exact path="/" component={Home}/>
                             <Route path="/article" component={Home}/>
                             <Route path="/article/all" component={Home}/>
