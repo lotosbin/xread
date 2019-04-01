@@ -51,7 +51,7 @@ const ArticleListContainer = ({location: {search}, match: {params: {box = "all"}
         <ArticleList
             data={articles.edges.map(it => it.node)}
             header={({id}) => <div>
-                {box === "inbox" ? <span onClick={() => markSpam({
+                {box !== "spam" ? <span onClick={() => markSpam({
                     variables: {id: id},
                     optimisticResponse: {
                         __typename: "Mutation",
