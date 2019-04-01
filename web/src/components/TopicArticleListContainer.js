@@ -3,6 +3,7 @@ import gql from "graphql-tag";
 import React from "react";
 import ArticleList from "./ArticleList";
 import TopicNavContainer from "./TopicNavContainer";
+import {fragment_article_list_item} from "./ArticleListItem";
 
 const TopicArticleListContainer = ({match: {params: {tag}}}) => <Query
     query={gql`query tag_articles($tag:ID!,$cursor: String) {
@@ -20,20 +21,15 @@ const TopicArticleListContainer = ({match: {params: {tag}}}) => <Query
                 edges{
                     cursor
                     node{
-                        id
-                        title
-                        summary
-                        link
-                        time
-                        tags
+                        ...fragment_article_list_item
                     }
                 }
             }
         }
     }
-
 }
-    `}
+${fragment_article_list_item}
+   `}
     variables={{tag: tag, cursor: null}}
 >
     {({loading, error, data: {node}, fetchMore, refetch}) => {

@@ -3,8 +3,9 @@ import {Query} from "react-apollo";
 import gql from "graphql-tag";
 import React from "react";
 import ArticleList from "./ArticleList";
+import {fragment_article_list_item} from "./ArticleListItem";
 
-const TagArticleListContainer = ({match: {params: {tag}}}) => <Query
+const TagArticleListContainer = ({match: {params: {tag}}}: { match: { params: { tag: string } } }) => <Query
     query={gql`query tag_articles($tag:ID!,$cursor: String) {
     node(id:$tag,type:"Tag"){
         id
@@ -20,12 +21,7 @@ const TagArticleListContainer = ({match: {params: {tag}}}) => <Query
                 edges{
                     cursor
                     node{
-                        id
-                        title
-                        summary
-                        link
-                        time
-                        tags
+                        ...fragment_article_list_item
                     }
                 }
             }
@@ -33,6 +29,7 @@ const TagArticleListContainer = ({match: {params: {tag}}}) => <Query
     }
 
 }
+${fragment_article_list_item}
     `}
     variables={{tag: tag, cursor: null}}
 >
