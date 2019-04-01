@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./ArticleListItem.module.css"
 import moment from "moment";
 import {Link} from "react-router-dom";
+import gql from "graphql-tag";
 
 function daysFromNow(date: string) {
     const m = moment(date);  // or whatever start date you have
@@ -21,7 +22,21 @@ function days2opacity(days: number): number {
     }
     return 0.2;
 }
-const ArticleListItem = ({data: {id, title, summary, link, time, tags = [], feed}, onClickItem, header = null}) => {
+
+export const fragment_article_list_item = gql`fragment fragment_article_list_item on Article{
+    id
+    title
+    summary
+    link
+    time
+    tags
+    box
+    feed{
+        title
+        link
+    }
+}`;
+const ArticleListItem = ({data: {id, title, summary, link, time, tags = [], feed, box}, onClickItem, header = null}) => {
     let {feed_link, feed_title} = feed || {};
     let time_moment = moment(time);
     return <div className={styles.container} style={{opacity: days2opacity(daysFromNow(time))}} key={id}>
@@ -29,6 +44,7 @@ const ArticleListItem = ({data: {id, title, summary, link, time, tags = [], feed
         <p className={styles.title}><a href={link} target="_blank">{title}</a> <span title={time_moment.calendar()}>{time_moment.fromNow()}</span></p>
         <p onClick={() => onClickItem && onClickItem({id})} className={styles.summary}>{summary}</p>
         <div className={styles.foot}>
+            <div>box:{box}</div>
             <div className={styles.tags}>tags:{tags.map(it => <span className={styles.tag}><Link to={`/article/tag/${it}`}>{it}</Link></span>)}</div>
             <div>feed: {feed_title || feed_link || ''}</div>
         </div>

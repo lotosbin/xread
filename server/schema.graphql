@@ -51,6 +51,7 @@ type Article implements Node {
     feed: Feed
     tags: [String]
     topic: String
+    box: String
 }
 
 type ArticleConnection {

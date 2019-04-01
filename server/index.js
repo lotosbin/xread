@@ -61,6 +61,10 @@ const resolvers = {
                 console.log(e);
                 return [];
             }
+        },
+        box: async (article,) => {
+            if (article.spam) return "spam";
+            return "inbox"
         }
     },
     Feed: {

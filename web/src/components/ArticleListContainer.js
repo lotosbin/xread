@@ -5,6 +5,7 @@ import ArticleList from "./ArticleList";
 import _ from "lodash";
 import {useMutation, useQuery} from "react-apollo-hooks";
 import queryString from "query-string";
+import {fragment_article_list_item} from "./ArticleListItem";
 
 let query = gql`query articles($cursor: String="",$box:String="all",$read:String="all") {
     articles(last:10,before: $cursor,box:$box,read:$read) {
@@ -17,20 +18,12 @@ let query = gql`query articles($cursor: String="",$box:String="all",$read:String
         edges{
             cursor
             node{
-                id
-                title
-                summary
-                link
-                time
-                tags
-                feed{
-                    title
-                    link
-                }
+                ...fragment_article_list_item
             }
         }
     }
 }
+${fragment_article_list_item}
 `;
 let mutationMarkSpam = gql`mutation markSpam($id:String) {
     markSpam(id:$id){
