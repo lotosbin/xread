@@ -43,7 +43,7 @@ const ArticleListContainer = ({location: {search}, match: {params: {box = "all"}
     const markRead = useMutation(mutationMarkRead);
     let {read = "all"} = queryString.parse(search);
     let variables = {cursor: "", box: box, read: read};
-    const {data: {articles}, fetchMore, refetch, loading, error} = useQuery(query, variables);
+    const {data: {articles}, fetchMore, refetch, loading, error} = useQuery(query, {variables});
     if (loading) return (<p>Loading...</p>);
     if (error) return (<p>Error !!!</p>);
     return <div>
