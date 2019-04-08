@@ -6,7 +6,7 @@ another rss reader
 react react-native graphql rss reader
 
 qq群: 631376463
-
+建议：[![Feature Requests](http://feathub.com/lotosbin/xread?format=svg)](http://feathub.com/lotosbin/xread)
 # DEV
 
 - mongo
