@@ -12,7 +12,7 @@ import styles from "./AppBar.module.css";
 
 const _styles = {
     root: {
-        flexGrow: 1,
+        flexGrow: 0,
     },
     grow: {
         flexGrow: 0,

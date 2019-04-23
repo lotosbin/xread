@@ -1,4 +1,16 @@
 .container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    min-height: 200px;
+
+}
+
+.left {
+    width: 200px;
+    overflow-y: scroll;
+}
+
+.right {
+    flex: 1;
+    overflow-y: scroll;
 }
