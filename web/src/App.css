@@ -3,7 +3,19 @@
   display: flex;
   flex-direction: column;
 }
+html {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
 
+
+
+body {
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
 html, body, #root, .App {
   height: 100%;
 }

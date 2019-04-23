@@ -8,6 +8,7 @@
 .left {
     width: 200px;
     overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .right {
