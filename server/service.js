@@ -64,7 +64,7 @@ export async function getArticles(args) {
         }
     }
     if (feedId) {
-        query.feedId = feedId;
+        query.feedId = `${feedId}`
     }
     if (tag) {
         query.tags = tag;
