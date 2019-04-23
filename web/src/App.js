@@ -7,7 +7,6 @@ import Home from "./Home";
 import Feed from "./Feed";
 import styles from "./App.module.css";
 import Tag from "./Tag";
-import Store from "./Store";
 import Topic from "./Topic";
 import {ApolloProvider as ApolloHooksProvider} from 'react-apollo-hooks';
 import AppBar from './components/AppBar'
@@ -26,7 +25,6 @@ class App extends Component {
                             <Route path="/feed" component={Feed}/>
                             <Route path="/tag" component={Tag}/>
                             <Route path="/topic" component={Topic}/>
-                            <Route path="/store" component={Store}/>
                         </div>
                     </Router>
                 </ApolloHooksProvider>

@@ -9,22 +9,10 @@ services:
 #      - ./mongo/data/db:/data/db
   server:
     build: ./server
-#    ports:
-#      - "4000:4000"
+    ports:
+      - "4000:4000"
     environment:
       - MONGO=mongodb://mongo:27017
-    links:
-      - mongo:mongo
-  store:
-    build: ./server
-    #    ports:
-    #      - "4000:4000"
-    environment:
-      - MONGO=mongodb://mongo:27017
-      - BAIDU_AIP_APP_ID=
-      - BAIDU_AIP_API_KEY=
-      - BAIDU_AIP_SECRET_KEY=
-      - STORE=1
     links:
       - mongo:mongo
   spider:
@@ -42,12 +30,12 @@ services:
     environment:
       - REACT_APP_API_URL=http://192.168.43.211:5000/graphql
       - REACT_APP_WEBSOCKET_URL=ws://192.168.43.211:5000/graphql
-#    ports:
-#      - "3000:3000"
-  nginx:
-    build: ./nginx
-    links:
-      - server:server
-      - web:web
     ports:
-      - "5000:80"
+      - "3000:3000"
+#  nginx:
+#    build: ./nginx
+#    links:
+#      - server:server
+#      - web:web
+#    ports:
+#      - "5000:80"

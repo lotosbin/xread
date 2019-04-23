@@ -41,7 +41,7 @@ function ButtonAppBar(props) {
                         <div className={styles.nav_item}><Link to="/topic">Topic</Link></div>
                         <div className={styles.nav_item}><Link to="/tag">Tag</Link></div>
                         <div className={styles.nav_item}><Link to="/feed">Feed</Link></div>
-                        <div className={styles.nav_item}><Link to="/store">Store</Link></div>
+                        <div className={styles.nav_item}><a href="http://store.xread.yuanjingtech.com" target="_blank">Store</a></div>
                     </div>
                     <Button color="inherit">Login</Button>
                 </Toolbar>

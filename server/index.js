@@ -1,15 +1,11 @@
+// @flow
 import {addArticle, addFeed, getArticles, getFeed, getFeeds, getTags, getTopics, markArticleSpam, parseArticleKeywords, readArticle} from "./service";
 import {makeConnection} from "./relay";
-import {makeExecutableSchema, addMockFunctionsToSchema, mergeSchemas} from "graphql-tools";
-import {createStoreSchema} from "./store";
-// Mocked chirp schema; we don't want to worry about schema implementation
-// right now since we're just demonstrating schema stitching
+import {makeExecutableSchema} from "graphql-tools";
+import {ApolloServer, gql, PubSub} from "apollo-server";
+import fs from "fs";
 
-
-const {ApolloServer, gql, PubSub} = require('apollo-server');
 const pubsub = new PubSub();
-
-const fs = require('fs');
 const typeDefs = gql`${fs.readFileSync(__dirname.concat('/schema.graphql'), 'utf8')}`;
 const ARTICLE_ADDED = "ARTICLE_ADDED";
 const FEED_ADDED = "FEED_ADDED";
@@ -118,12 +114,10 @@ const resolvers = {
             return feed;
         },
         markReaded: async (root, args, context) => {
-            const article = await readArticle(args);
-            return article;
+            return await readArticle(args);
         },
         markSpam: async (root, args, context) => {
-            const article = await markArticleSpam(args);
-            return article;
+            return await markArticleSpam(args);
         },
     },
     Subscription: {
@@ -137,26 +131,13 @@ const resolvers = {
         }
     },
 };
-export const serverSchema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
-});
 (async () => {
-    let port, schema;
-    if (process.env.STORE) {
-        schema = mergeSchemas({
-            schemas: [serverSchema],
-        });
-        port = 4001;
-    } else {
-        const storeSchema = await createStoreSchema();
-        schema = mergeSchemas({
-            schemas: [serverSchema, storeSchema],
-        });
-        port = 4000;
-    }
+    let schema = makeExecutableSchema({
+        typeDefs,
+        resolvers,
+    });
     const server = new ApolloServer({schema: schema});
-    server.listen({port: port}).then(({url}) => {
+    server.listen({port: 4000}).then(({url}) => {
         console.log(`🚀  Server ready at ${url}`);
     });
 })();
