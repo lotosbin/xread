@@ -41,7 +41,7 @@ export async function addFeed({link, title}: { link: string, title: string }) {
 }
 
 export async function getArticles(args) {
-    console.log(`getArticles:args=${JSON.stringify(args)}`)
+    console.log(`getArticles:args=${JSON.stringify(args)}`);
     let {first, after, last, before, feedId, tag, topic, box, read = "all"} = args;
     assert(!!first || !!last, "first or last should grate then 0");
     assert(!(!!first && !!last), 'first or last cannot set same time');

@@ -1,6 +1,8 @@
+// @flow
 import {makeConnection} from "./relay";
 import {addArticle, addFeed, getArticles, getFeed, getFeeds, getTags, getTopics, markArticleSpam, parseArticleKeywords, readArticle} from "./service";
 import {PubSub} from "apollo-server";
+import {addFeedToStore} from "./store/service";
 
 const ARTICLE_ADDED = "ARTICLE_ADDED";
 const FEED_ADDED = "FEED_ADDED";
@@ -106,6 +108,10 @@ const resolvers = {
         addFeed: async (root, args, context) => {
             let feed = await addFeed(args);
             pubsub.publish(FEED_ADDED, {feedAdded: feed});
+            if (feed) {
+                // noinspection JSIgnoredPromiseFromCall
+                addFeedToStore(feed)
+            }
             return feed;
         },
         markReaded: async (root, args, context) => {
