@@ -9,7 +9,7 @@ export function Advice() {
         <h2 onClick={() => setHide(!hide)}>帮助我们改进 </h2>
         {hide ? null : <div className={styles.content}>
             <p>点击下方链接，给喜欢的功能投票，或者提出您的建议！</p>
-            <a href="http://feathub.com/lotosbin/xread">
+            <a href="http://feathub.com/lotosbin/xread" target="_blank">
                 <img className={theme === 'dark' ? styles.img_dark : styles.img} src={"http://feathub.com/lotosbin/xread?format=svg"} alt={"advice"}/>
             </a>
         </div>
