@@ -12,3 +12,18 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+/* 下面用于检查系统主题色调 var isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;*/
+@media (prefers-color-scheme: light) {
+  body {
+    background-color: #FFF;
+    color: #000;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #000;
+    color: #FFF;
+  }
+}

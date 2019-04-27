@@ -9,6 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import {Link} from "react-router-dom";
 import styles from "./AppBar.module.css";
+import ThemeSwitch from "./ThemeSwitch";
 
 const _styles = {
     root: {
@@ -43,6 +44,7 @@ function ButtonAppBar(props) {
                         <div className={styles.nav_item}><Link to="/feed">Feed</Link></div>
                         <div className={styles.nav_item}><a href="http://store.xread.yuanjingtech.com" target="_blank">Store</a></div>
                     </div>
+                    <ThemeSwitch/>
                     <Button color="inherit">Login</Button>
                 </Toolbar>
             </AppBar>
