@@ -1,13 +1,14 @@
+// @flow
 import React, {useState} from "react";
 import gql from "graphql-tag";
-import styles from "../FeedSubscribe.module.css";
+import styles from "./FeedSubscribe.module.css";
 import {Mutation} from "react-apollo";
 import {withRouter} from "react-router-dom";
 import query from "query-string";
 
 const FeedSubscribeContainer = ({location: {search}, history}) => {
     const [url, setUrl] = useState(query.parse(search).url);
-    const [title, setTitle] = useState("");
+    const [title, setTitle] = useState(query.parse(search).title || "");
 
     return <Mutation mutation={gql`mutation addFeed($link:String!,$title:String) {
         addFeed(link:$link,title:$title){
