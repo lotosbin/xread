@@ -43,6 +43,7 @@ function ButtonAppBar(props) {
                         <div className={styles.nav_item}><Link to="/tag">Tag</Link></div>
                         <div className={styles.nav_item}><Link to="/feed">Feed</Link></div>
                         <div className={styles.nav_item}><a href="http://store.xread.yuanjingtech.com" target="_blank">Store</a></div>
+                        <div className={styles.nav_item}><a href="http://feathub.com/lotosbin/xread" target="_blank">功能建议</a></div>
                     </div>
                     <ThemeSwitch/>
                     <Button color="inherit">Login</Button>
