@@ -11,12 +11,11 @@ import SibeBar from "./components/SibeBar";
 
 const Home = ({location: {pathname, search}}) => {
 
-    return <div style={{display: "flex", flexDirection: "row", width: '100%'}}>
+    return <div className={styles.container}>
         <div className={styles.nav}>
             <SibeBar/>
-
         </div>
-        <div style={{flexGrow: 1}}>
+        <div className={styles.right}>
             <Subscription subscription={gql`subscription {
     articleAdded {
         id
@@ -33,12 +32,14 @@ const Home = ({location: {pathname, search}}) => {
                 <Link to={`?read=all`}>All</Link>
                 <Link to={`?read=unread`}>Unread Only</Link>
             </div>
+            <div className={styles.article_list}>
+                <Route exact path="/article" component={ArticleListContainer}/>
+                <Route path="/article/box/:box" component={ArticleListContainer}/>
+                <Route path="/article/box/:box/read/:read" component={ArticleListContainer}/>
+                <Route path="/article/tag/:tag" component={TagArticleListContainer}/>
+                <Route path="/article/topic/:tag" component={TopicArticleListContainer}/>
+            </div>
 
-            <Route exact path="/article" component={ArticleListContainer}/>
-            <Route path="/article/box/:box" component={ArticleListContainer}/>
-            <Route path="/article/box/:box/read/:read" component={ArticleListContainer}/>
-            <Route path="/article/tag/:tag" component={TagArticleListContainer}/>
-            <Route path="/article/topic/:tag" component={TopicArticleListContainer}/>
         </div>
     </div>
 };

@@ -15,12 +15,6 @@ services:
       - MONGO=mongodb://mongo:27017
     links:
       - mongo:mongo
-  spider:
-    build: ./spider
-    environment:
-      - API_URL=http://server:4000/graphql
-    links:
-      - server:server
   web:
     build:
       context: ./web

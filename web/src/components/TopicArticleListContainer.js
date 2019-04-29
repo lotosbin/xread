@@ -2,11 +2,10 @@ import {Query} from "react-apollo";
 import gql from "graphql-tag";
 import React from "react";
 import ArticleList from "./ArticleList";
-import TopicNavContainer from "./TopicNavContainer";
 import {fragment_article_list_item} from "./ArticleListItem";
+import {useQuery} from "react-apollo-hooks";
 
-const TopicArticleListContainer = ({match: {params: {tag}}}) => <Query
-    query={gql`query tag_articles($tag:ID!,$cursor: String) {
+const query = gql`query tag_articles($tag:ID!,$cursor: String) {
     node(id:$tag,type:"Topic"){
         id
         ... on Topic{
@@ -29,40 +28,37 @@ const TopicArticleListContainer = ({match: {params: {tag}}}) => <Query
     }
 }
 ${fragment_article_list_item}
-   `}
-    variables={{tag: tag, cursor: null}}
->
-    {({loading, error, data: {node}, fetchMore, refetch}) => {
-        if (loading) return <p>Loading...</p>;
-        if (error) return <p>Error :(</p>;
-        let {articles} = node || {};
-        return <div>
-            <TopicNavContainer/>
-            <div onClick={() => refetch()}>refetch</div>
-            <ArticleList data={articles.edges.map(it => it.node)} loadMore={() => fetchMore({
-                variables: {
-                    cursor: articles.pageInfo.endCursor
-                },
-                updateQuery: (previousResult, {fetchMoreResult}) => {
-                    const newEdges = fetchMoreResult.node.articles.edges;
-                    const pageInfo = fetchMoreResult.node.articles.pageInfo;
-
-                    return newEdges.length
-                        ? {
-                            // Put the new comments at the end of the list and update `pageInfo`
-                            // so we have the new `endCursor` and `hasNextPage` values
-                            node: {
-                                articles: {
-                                    __typename: previousResult.node.articles.__typename,
-                                    edges: [...previousResult.node.articles.edges, ...newEdges],
-                                    pageInfo
-                                }
+`;
+const TopicArticleListContainer = ({match: {params: {tag}}}) => {
+    const variables = {tag: tag, cursor: null};
+    const {data, fetchMore, refetch, loading, error} = useQuery(query, {variables});
+    if (loading) return (<p>Loading...</p>);
+    if (error) return (<p>Error !!!</p>);
+    let {articles} = (data || {}).node || {};
+    return <div>
+        <div onClick={() => refetch()}>refetch</div>
+        <ArticleList data={articles.edges.map(it => it.node)} loadMore={() => fetchMore({
+            variables: {
+                cursor: articles.pageInfo.endCursor
+            },
+            updateQuery: (previousResult, {fetchMoreResult}) => {
+                const newEdges = fetchMoreResult.node.articles.edges;
+                const pageInfo = fetchMoreResult.node.articles.pageInfo;
+                return newEdges.length
+                    ? {
+                        // Put the new comments at the end of the list and update `pageInfo`
+                        // so we have the new `endCursor` and `hasNextPage` values
+                        node: {
+                            articles: {
+                                __typename: previousResult.node.articles.__typename,
+                                edges: [...previousResult.node.articles.edges, ...newEdges],
+                                pageInfo
                             }
                         }
-                        : previousResult;
-                }
-            })}/>
-        </div>;
-    }}
-</Query>;
+                    }
+                    : previousResult;
+            }
+        })}/>
+    </div>;
+};
 export default TopicArticleListContainer;

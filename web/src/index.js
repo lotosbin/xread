@@ -9,6 +9,7 @@ import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 import ThemeContext from "./contexts/ThemeContext";
 
 const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
 function MyApp() {
     const [theme, setTheme] = useState(isDark ? 'dark' : "light");
 
@@ -22,8 +23,8 @@ function MyApp() {
             <ThemeContext.Provider value={{theme, setTheme}}>
                 <MuiThemeProvider theme={uiTheme}>
                     <CssBaseline/>
-                <App/>
-            </MuiThemeProvider>
+                    <App/>
+                </MuiThemeProvider>
             </ThemeContext.Provider>
         </React.Fragment>
     );
