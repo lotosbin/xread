@@ -6,6 +6,7 @@ import _ from "lodash";
 import {useMutation, useQuery} from "react-apollo-hooks";
 import queryString from "query-string";
 import {fragment_article_list_item} from "./ArticleListItem";
+import {useTranslation} from "react-i18next";
 
 let query = gql`query articles($cursor: String="",$box:String="all",$read:String="all") {
     articles(last:10,before: $cursor,box:$box,read:$read) {
@@ -38,13 +39,14 @@ let mutationMarkRead = gql`mutation markRead($id:String) {
 }
 `;
 const ArticleListContainer = ({location: {search}, match: {params: {box = "all"}}}) => {
+    const {t, ready} = useTranslation("", {useSuspense: false});
     const markSpam = useMutation(mutationMarkSpam);
     const markRead = useMutation(mutationMarkRead);
     let {read = "all"} = queryString.parse(search);
     let variables = {cursor: "", box: box, read: read};
     const {data: {articles}, fetchMore, refetch, loading, error} = useQuery(query, {variables});
-    if (loading) return (<p>Loading...</p>);
-    if (error) return (<p>Error !!!</p>);
+    if (loading) return (<p>{t('Loading')}...</p>);
+    if (error) return (<p>{t('Error')} !!!</p>);
     return <div>
         <ArticleList
             refrech={() => refetch()}
@@ -99,7 +101,6 @@ const ArticleListContainer = ({location: {search}, match: {params: {box = "all"}
                 }
             })}
         />
-
     </div>;
 };
 export default ArticleListContainer;

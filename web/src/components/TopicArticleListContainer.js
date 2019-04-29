@@ -1,9 +1,9 @@
-import {Query} from "react-apollo";
 import gql from "graphql-tag";
 import React from "react";
 import ArticleList from "./ArticleList";
 import {fragment_article_list_item} from "./ArticleListItem";
 import {useQuery} from "react-apollo-hooks";
+import {useTranslation} from "react-i18next";
 
 const query = gql`query tag_articles($tag:ID!,$cursor: String) {
     node(id:$tag,type:"Topic"){
@@ -30,10 +30,11 @@ const query = gql`query tag_articles($tag:ID!,$cursor: String) {
 ${fragment_article_list_item}
 `;
 const TopicArticleListContainer = ({match: {params: {tag}}}) => {
+    const {t, ready} = useTranslation("", {useSuspense: false});
     const variables = {tag: tag, cursor: null};
     const {data, fetchMore, refetch, loading, error} = useQuery(query, {variables});
-    if (loading) return (<p>Loading...</p>);
-    if (error) return (<p>Error !!!</p>);
+    if (loading) return (<p>{t('Loading')}...</p>);
+    if (error) return (<p>{t('Error')} !!!</p>);
     let {articles} = (data || {}).node || {};
     return <div>
         <ArticleList

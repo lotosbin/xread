@@ -12,6 +12,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
+import {useTranslation} from "react-i18next";
 
 const query = gql`{
     tags{
@@ -24,12 +25,12 @@ const query = gql`{
     }
 }`;
 const Tag = () => {
-
+    const {t, ready} = useTranslation("", {useSuspense: false});
     const [keyword, setKeyword] = useState(null);
     let variables = {};
     const {data: {tags}, fetchMore, refetch, loading, error} = useQuery(query, {variables});
-    if (loading) return (<p>Loading...</p>);
-    if (error) return (<p>Error !!!</p>);
+    if (loading) return (<p>{t('Loading')}...</p>);
+    if (error) return (<p>{t('Error')} !!!</p>);
     var list = tags.edges.map(it => it.node);
     if (keyword) {
         list = list.filter(it => it.name.toLowerCase().indexOf(keyword.toLowerCase()) > -1)
@@ -37,7 +38,7 @@ const Tag = () => {
     return <div className={styles.container}>
         <div className={styles.left}>
             <TextField
-                label="Filter"
+                label={t("Filter")}
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
                 margin="normal"
@@ -45,7 +46,7 @@ const Tag = () => {
                 InputProps={{
                     endAdornment: (
                         <InputAdornment position="end">
-                            <IconButton aria-label="Toggle password visibility" onClick={() => setKeyword('')}>
+                            <IconButton aria-label={t("Filter")} onClick={() => setKeyword('')}>
                                 <DeleteIcon />
                             </IconButton>
                         </InputAdornment>

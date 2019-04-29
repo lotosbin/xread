@@ -8,6 +8,7 @@ import TopicArticleListContainer from "./components/TopicArticleListContainer";
 import List from "@material-ui/core/List";
 import {ListItem} from "@material-ui/core";
 import ListItemText from "@material-ui/core/ListItemText";
+import {useTranslation} from "react-i18next";
 
 const query = gql`{
     tags:topics{
@@ -20,10 +21,11 @@ const query = gql`{
     }
 }`;
 const Topic = () => {
+    const {t, ready} = useTranslation("", {useSuspense: false});
     let variables = {};
     const {data: {tags}, fetchMore, refetch, loading, error} = useQuery(query, {variables});
-    if (loading) return (<p>Loading...</p>);
-    if (error) return (<p>Error !!!</p>);
+    if (loading) return (<p>{t('Loading')}...</p>);
+    if (error) return (<p>{t('Error')} !!!</p>);
     const list = tags.edges.map(it => it.node);
     return <div className={styles.container}>
         <List component={"nav"} className={styles.left}>

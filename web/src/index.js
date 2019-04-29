@@ -1,5 +1,5 @@
 // @flow
-import React, {useState} from 'react';
+import React, {Suspense, useState} from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
@@ -7,6 +7,8 @@ import * as serviceWorker from './serviceWorker';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 import ThemeContext from "./contexts/ThemeContext";
+import './i18n';
+
 
 const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 

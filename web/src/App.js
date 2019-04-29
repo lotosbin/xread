@@ -11,26 +11,24 @@ import {ApolloProvider as ApolloHooksProvider} from 'react-apollo-hooks';
 import AppBar from './components/AppBar'
 import {Advice} from "./components/Advice";
 
-function App() {
-    return (
-        <ApolloProvider client={client}>
-            <ApolloHooksProvider client={client}>
-                <Router>
-                    <div className="App">
-                        <AppBar/>
-                        <Route exact path="/" component={Home}/>
-                        <Route path="/article" component={Home}/>
-                        <Route path="/article/all" component={Home}/>
-                        <Route path="/feed" component={Feed}/>
-                        <Route path="/tag" component={Tag}/>
-                        <Route path="/topic" component={Topic}/>
-                        <Advice/>
-                    </div>
-                </Router>
-            </ApolloHooksProvider>
-        </ApolloProvider>
-    );
-}
+const App = () => (
+    <ApolloProvider client={client}>
+        <ApolloHooksProvider client={client}>
+            <Router>
+                <div className="App">
+                    <AppBar/>
+                    <Route exact path="/" component={Home}/>
+                    <Route path="/article" component={Home}/>
+                    <Route path="/article/all" component={Home}/>
+                    <Route path="/feed" component={Feed}/>
+                    <Route path="/tag" component={Tag}/>
+                    <Route path="/topic" component={Topic}/>
+                    <Advice/>
+                </div>
+            </Router>
+        </ApolloHooksProvider>
+    </ApolloProvider>
+);
 
 
 export default App;

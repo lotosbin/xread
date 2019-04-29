@@ -8,6 +8,7 @@ import styles from './Feed.module.css'
 import FeedArticleListContainer from "./components/FeedArticleListContainer";
 import type {FeedListDataItem} from "./components/FeedList";
 import Button from "@material-ui/core/Button";
+import {useTranslation} from "react-i18next";
 
 const query = gql`{
     feeds(last:100){
@@ -20,27 +21,29 @@ const query = gql`{
         }
     }
 }`;
-const Feed = ({history}) => {
-    return <div className={styles.container}>
-        <div className={styles.left}>
-
-            <Button variant={"outlined"} component={Link} to="/feed/subscribe">subscribe</Button>
-            <div>
-                <Query query={query}>
-                    {({loading, error, data: {feeds}, fetchMore, refetch, subscribeToMore}) => {
-                        if (loading) return <p>Loading...</p>;
-                        if (error) return <p>Error :(</p>;
-                        const list = feeds.edges.map(it => it.node);
-                        return <FeedList
-                            data={list}
-                            subscribeToNewFeeds={() => subscribeToMore({
-                                document: gql`subscription onFeedAdded {
+const subscription = gql`subscription onFeedAdded {
     feedAdded {
         id
         link
         title
     }
-}`,
+}`;
+const Feed = ({history}) => {
+    const {t, ready} = useTranslation("", {useSuspense: false});
+    return <div className={styles.container}>
+        <div className={styles.left}>
+
+            <Button variant={"outlined"} component={Link} to="/feed/subscribe">{t('subscribe')}</Button>
+            <div>
+                <Query query={query}>
+                    {({loading, error, data: {feeds}, fetchMore, refetch, subscribeToMore}) => {
+                        if (loading) return <p>{t('Loading')}...</p>;
+                        if (error) return <p>{t('Error')} :(</p>;
+                        const list = feeds.edges.map(it => it.node);
+                        return <FeedList
+                            data={list}
+                            subscribeToNewFeeds={() => subscribeToMore({
+                                document: subscription,
                                 updateQuery: (prev, {subscriptionData}) => {
                                     if (!subscriptionData.data) return prev;
                                     const newFeed = subscriptionData.data.feedAdded;

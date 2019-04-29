@@ -4,6 +4,7 @@ import React from "react";
 import ArticleList from "./ArticleList";
 import {fragment_article_list_item} from "./ArticleListItem";
 import {useQuery} from "react-apollo-hooks";
+import {useTranslation} from "react-i18next";
 
 const query = gql`query tag_articles($tag:ID!,$cursor: String) {
     node(id:$tag,type:"Tag"){
@@ -31,10 +32,11 @@ const query = gql`query tag_articles($tag:ID!,$cursor: String) {
 ${fragment_article_list_item}
 `;
 const TagArticleListContainer = ({match: {params: {tag}}}: { match: { params: { tag: string } } }) => {
+    const {t, ready} = useTranslation("", {useSuspense: false});
     const variables = {tag: tag, cursor: null};
     const {data: {node = {}} = {}, fetchMore, refetch, loading, error} = useQuery(query, {variables});
-    if (loading) return (<p>Loading...</p>);
-    if (error) return (<p>Error !!!</p>);
+    if (loading) return (<p>{t('Loading')}...</p>);
+    if (error) return (<p>{t('Error')} !!!</p>);
     let {articles} = node || {};
     return <div>
         <ArticleList
