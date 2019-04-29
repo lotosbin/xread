@@ -9,6 +9,9 @@ import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from '@material-ui/icons/Delete';
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
 
 const query = gql`{
     tags{
@@ -49,9 +52,9 @@ const Tag = () => {
                     ),
                 }}
             />
-            <div className={styles.tag_list}>
-                {list.map(it => <div key={it.name} className={styles.tag}><Link to={`/tag/${it.name}`}>{it.name}</Link></div>)}
-            </div>
+            <List component={"nav"} className={styles.tag_list}>
+                {list.map(it => <ListItem button key={it.name} className={styles.tag} component={Link} to={`/tag/${it.name}`}><ListItemText>{it.name}</ListItemText></ListItem>)}
+            </List>
         </div>
         <div className={styles.right}>
             <Route path="/tag/:tag" component={TagArticleListContainer}/>

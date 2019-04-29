@@ -7,16 +7,9 @@ import FeedList from "./components/FeedList";
 import styles from './Feed.module.css'
 import FeedArticleListContainer from "./components/FeedArticleListContainer";
 import type {FeedListDataItem} from "./components/FeedList";
+import Button from "@material-ui/core/Button";
 
-const Feed = ({history}) => {
-
-    return <div className={styles.container}>
-        <div className={styles.left}>
-            <Route path="/feed/subscribe" component={FeedSubscribeContainer}/>
-            <Link to="/feed/subscribe">subscribe</Link>
-
-            <div>
-                <Query query={gql`{
+const query = gql`{
     feeds(last:100){
         edges{
             node{
@@ -26,7 +19,14 @@ const Feed = ({history}) => {
             }
         }
     }
-}`}>
+}`;
+const Feed = ({history}) => {
+    return <div className={styles.container}>
+        <div className={styles.left}>
+
+            <Button variant={"outlined"} component={Link} to="/feed/subscribe">subscribe</Button>
+            <div>
+                <Query query={query}>
                     {({loading, error, data: {feeds}, fetchMore, refetch, subscribeToMore}) => {
                         if (loading) return <p>Loading...</p>;
                         if (error) return <p>Error :(</p>;
@@ -60,6 +60,7 @@ const Feed = ({history}) => {
         </div>
         <div className={styles.right}>
             <Route path={`/feed/:feedId/article`} component={FeedArticleListContainer}/>
+            <Route path="/feed/subscribe" component={FeedSubscribeContainer}/>
         </div>
     </div>
 };

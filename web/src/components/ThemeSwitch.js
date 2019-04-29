@@ -14,7 +14,6 @@ const ThemeSwitch = () => {
                     checked={theme === 'dark'}
                     onChange={(e) => setTheme(e.target.checked ? 'dark' : 'light')}
                     value={theme === 'dark'}
-                    color="primary"
                 />
             }
             label="Dark Mode"

@@ -5,6 +5,8 @@ import styles from "./FeedSubscribe.module.css";
 import {Mutation} from "react-apollo";
 import {withRouter} from "react-router-dom";
 import query from "query-string";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
 
 const FeedSubscribeContainer = ({location: {search}, history}) => {
     const [url, setUrl] = useState(query.parse(search).url);
@@ -19,14 +21,14 @@ const FeedSubscribeContainer = ({location: {search}, history}) => {
     }`}>
         {(addFeed, {data}) => (
             <div className={styles.container}>
-                <input type="text" value={url} onChange={event => setUrl(event.target.value)}/>
-                <input type="text" value={title} onChange={event => setTitle(event.target.value)}/>
-                <button onClick={e => {
+                <TextField margin="normal" variant="outlined" label="URL" value={url} onChange={event => setUrl(event.target.value)}/>
+                <TextField margin="normal" variant="outlined" label="Title" value={title} onChange={event => setTitle(event.target.value)}/>
+                <Button onClick={e => {
                     e.preventDefault();
                     addFeed({variables: {link: url, title: title}});
                     history.push('/feed')
                 }}>subscribe
-                </button>
+                </Button>
             </div>
         )}
     </Mutation>;

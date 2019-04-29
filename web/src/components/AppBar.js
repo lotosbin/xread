@@ -37,14 +37,14 @@ function ButtonAppBar(props) {
                     <Typography variant="h6" color="inherit" className={classes.grow}>
                         xRead
                     </Typography>
-                    <div className={styles.nav}>
-                        <div className={styles.nav_item}><Link to="/article">Home</Link></div>
-                        <div className={styles.nav_item}><Link to="/topic">Topic</Link></div>
-                        <div className={styles.nav_item}><Link to="/tag">Tag</Link></div>
-                        <div className={styles.nav_item}><Link to="/feed">Feed</Link></div>
-                        <div className={styles.nav_item}><a href="http://store.xread.yuanjingtech.com" target="_blank">Store</a></div>
-                        <div className={styles.nav_item}><a href="http://feathub.com/lotosbin/xread" target="_blank">功能建议</a></div>
-                    </div>
+                    <Toolbar className={styles.nav}>
+                        <Button className={styles.nav_item} color="inherit" component={Link} to="/article">Home</Button>
+                        <Button className={styles.nav_item} color="inherit" component={Link} to="/topic">Topic</Button>
+                        <Button className={styles.nav_item} color="inherit" component={Link} to="/tag">Tag</Button>
+                        <Button className={styles.nav_item} color="inherit" component={Link} to="/feed">Feed</Button>
+                        <Button className={styles.nav_item} color="inherit" component={"a"} href="http://store.xread.yuanjingtech.com" target="_blank">Store</Button>
+                        <Button className={styles.nav_item} color="inherit" component={"a"} href="http://feathub.com/lotosbin/xread" target="_blank">功能建议</Button>
+                    </Toolbar>
                     <ThemeSwitch/>
                     <Button color="inherit">Login</Button>
                 </Toolbar>

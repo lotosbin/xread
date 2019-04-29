@@ -14,6 +14,9 @@ function MyApp() {
     const [theme, setTheme] = useState(isDark ? 'dark' : "light");
 
     const uiTheme = createMuiTheme({
+        typography: {
+            useNextVariants: true,
+        },
         palette: {
             type: theme,
         },

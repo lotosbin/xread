@@ -5,6 +5,9 @@ import {Link, Route, withRouter} from "react-router-dom";
 import styles from "./Topic.module.css"
 import {useQuery} from "react-apollo-hooks";
 import TopicArticleListContainer from "./components/TopicArticleListContainer";
+import List from "@material-ui/core/List";
+import {ListItem} from "@material-ui/core";
+import ListItemText from "@material-ui/core/ListItemText";
 
 const query = gql`{
     tags:topics{
@@ -23,9 +26,9 @@ const Topic = () => {
     if (error) return (<p>Error !!!</p>);
     const list = tags.edges.map(it => it.node);
     return <div className={styles.container}>
-        <div className={styles.left}>
-            {list.map(it => <span className={styles.tag}><Link to={`/topic/${it.name}`}>{it.name}</Link></span>)}
-        </div>
+        <List component={"nav"} className={styles.left}>
+            {list.map(it => <ListItem key={it.id} button component={Link} className={styles.tag} to={`/topic/${it.name}`}><ListItemText>{it.name}</ListItemText></ListItem>)}
+        </List>
         <div className={styles.right}>
             <Route path="/topic/:tag" component={TopicArticleListContainer}/>
         </div>

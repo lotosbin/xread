@@ -38,7 +38,6 @@ let mutationMarkRead = gql`mutation markRead($id:String) {
 }
 `;
 const ArticleListContainer = ({location: {search}, match: {params: {box = "all"}}}) => {
-
     const markSpam = useMutation(mutationMarkSpam);
     const markRead = useMutation(mutationMarkRead);
     let {read = "all"} = queryString.parse(search);
@@ -47,8 +46,8 @@ const ArticleListContainer = ({location: {search}, match: {params: {box = "all"}
     if (loading) return (<p>Loading...</p>);
     if (error) return (<p>Error !!!</p>);
     return <div>
-        <div onClick={() => refetch()}>refetch</div>
         <ArticleList
+            refrech={() => refetch()}
             data={articles.edges.map(it => it.node)}
             header={({id}) => <div>
                 {box !== "spam" ? <span onClick={() => markSpam({

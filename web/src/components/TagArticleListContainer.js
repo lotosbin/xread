@@ -37,30 +37,32 @@ const TagArticleListContainer = ({match: {params: {tag}}}: { match: { params: { 
     if (error) return (<p>Error !!!</p>);
     let {articles} = node || {};
     return <div>
-        <div onClick={() => refetch()}>refetch</div>
-        <ArticleList data={articles.edges.map(it => it.node)} loadMore={() => fetchMore({
-            variables: {
-                cursor: articles.pageInfo.endCursor
-            },
-            updateQuery: (previousResult, {fetchMoreResult}) => {
-                const newEdges = fetchMoreResult.node.articles.edges;
-                const pageInfo = fetchMoreResult.node.articles.pageInfo;
+        <ArticleList
+            refrech={() => refetch()}
+            data={articles.edges.map(it => it.node)}
+            loadMore={() => fetchMore({
+                variables: {
+                    cursor: articles.pageInfo.endCursor
+                },
+                updateQuery: (previousResult, {fetchMoreResult}) => {
+                    const newEdges = fetchMoreResult.node.articles.edges;
+                    const pageInfo = fetchMoreResult.node.articles.pageInfo;
 
-                return newEdges.length
-                    ? {
-                        // Put the new comments at the end of the list and update `pageInfo`
-                        // so we have the new `endCursor` and `hasNextPage` values
-                        node: {
-                            articles: {
-                                __typename: previousResult.node.articles.__typename,
-                                edges: [...previousResult.node.articles.edges, ...newEdges],
-                                pageInfo
+                    return newEdges.length
+                        ? {
+                            // Put the new comments at the end of the list and update `pageInfo`
+                            // so we have the new `endCursor` and `hasNextPage` values
+                            node: {
+                                articles: {
+                                    __typename: previousResult.node.articles.__typename,
+                                    edges: [...previousResult.node.articles.edges, ...newEdges],
+                                    pageInfo
+                                }
                             }
                         }
-                    }
-                    : previousResult;
-            }
-        })}/>
+                        : previousResult;
+                }
+            })}/>
     </div>;
 };
 export default TagArticleListContainer;
