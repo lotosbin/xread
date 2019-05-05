@@ -12,12 +12,20 @@ html {
 
 
 body {
+  min-height: 0;
   height: 100%;
   width: 100%;
-  overflow: auto;
+  display: flex;
+  flex-direction: column;
 }
-html, body, #root, .App {
+
+html, body, .App {
   height: 100%;
+}
+
+#root {
+  min-height: 0;
+  flex: 1;
 }
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
