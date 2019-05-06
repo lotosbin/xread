@@ -7,6 +7,7 @@ import {useMutation, useQuery} from "react-apollo-hooks";
 import queryString from "query-string";
 import {fragment_article_list_item} from "./ArticleListItem";
 import {useTranslation} from "react-i18next";
+import {Button} from "@material-ui/core";
 
 let query = gql`query articles($cursor: String="",$box:String="all",$read:String="all") {
     articles(last:10,before: $cursor,box:$box,read:$read) {
@@ -52,7 +53,8 @@ const ArticleListContainer = ({location: {search}, match: {params: {box = "all"}
             refrech={() => refetch()}
             data={articles.edges.map(it => it.node)}
             header={({id}) => <div>
-                {box !== "spam" ? <span onClick={() => markSpam({
+                <Button onClick={() => markRead({variables: {id: id}})} color="primary">{t('Mark Read')}</Button>
+                {box !== "spam" ? <Button onClick={() => markSpam({
                     variables: {id: id},
                     optimisticResponse: {
                         __typename: "Mutation",
@@ -76,8 +78,7 @@ const ArticleListContainer = ({location: {search}, match: {params: {box = "all"}
                             proxy.writeQuery({query: query, data});
                         }
                     }
-                })}>Spam</span> : null}
-                <span onClick={() => markRead({variables: {id: id}})}>mark read</span>
+                })} color="secondary">{t('Mark Spam')}</Button> : null}
             </div>}
             loadMore={() => fetchMore({
                 variables: {

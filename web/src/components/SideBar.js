@@ -9,26 +9,30 @@ import Divider from '@material-ui/core/Divider';
 import InboxIcon from '@material-ui/icons/Inbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
 import {Link} from "react-router-dom";
+import {useTranslation} from "react-i18next";
+import {makeStyles} from '@material-ui/styles';
+import styles from './SideBar.module.css'
+// const styles = theme => ({
+//     root: {
+//         width: '100%',
+//         maxWidth: 360,
+//         backgroundColor: theme.palette.background.paper,
+//     },
+// });
+// const useStyles = makeStyles(styles);
 
-const styles = theme => ({
-    root: {
-        width: '100%',
-        maxWidth: 360,
-        backgroundColor: theme.palette.background.paper,
-    },
-});
 function ListItemLink(props) {
     return <ListItem button component="a" {...props} />;
 }
-
-function SideBar(props) {
-    const {classes} = props;
+const SideBar = props => {
+    const {t, ready} = useTranslation("", {useSuspense: false});
+    // const classes = useStyles();
     return (
-        <div className={classes.root}>
+        <div className={styles.root}>
             <List component="nav">
                 <Link to={`/article/box/all`}>
                     <ListItem button>
-                        <ListItemText primary="All"/>
+                        <ListItemText primary={t("All")}/>
                     </ListItem>
                 </Link>
             </List>
@@ -39,7 +43,7 @@ function SideBar(props) {
                         <ListItemIcon>
                             <InboxIcon/>
                         </ListItemIcon>
-                        <ListItemText primary="Inbox"/>
+                        <ListItemText primary={t("Inbox")}/>
                     </ListItem>
                 </Link>
             </List>
@@ -47,16 +51,16 @@ function SideBar(props) {
             <List component="nav">
                 <Link to={`/article/box/spam`}>
                     <ListItemLink href="#simple-list">
-                        <ListItemText primary="Spam"/>
+                        <ListItemText primary={t("Spam")}/>
                     </ListItemLink>
                 </Link>
             </List>
         </div>
     );
-}
+};
 
 SideBar.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(SideBar);
+export default SideBar;

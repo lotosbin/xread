@@ -7,6 +7,7 @@ import MaterialLink from '@material-ui/core/Link';
 import gql from "graphql-tag";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
+import {useTranslation} from "react-i18next";
 
 function daysFromNow(date: string) {
     const m = moment(date);  // or whatever start date you have
@@ -41,6 +42,7 @@ export const fragment_article_list_item = gql`fragment fragment_article_list_ite
     }
 }`;
 const ArticleListItem = ({data: {id, title, summary, link, time, tags = [], feed, box}, onClickItem, header = null}) => {
+    const {t, ready} = useTranslation("", {useSuspense: false});
     let {feed_link, feed_title} = feed || {};
     let time_moment = moment(time);
     return (<div>
@@ -55,9 +57,9 @@ const ArticleListItem = ({data: {id, title, summary, link, time, tags = [], feed
                 <p onClick={() => onClickItem && onClickItem({id})} className={styles.summary}>{summary}</p>
             </Typography>
             <div className={styles.foot}>
-                <Typography>box:{box}</Typography>
-                <Typography className={styles.tags}>tags:{tags.map(it => <span key={it} className={styles.tag}><Link to={`/article/tag/${it}`}>{it}</Link></span>)}</Typography>
-                <Typography>feed: {feed_title || feed_link || ''}</Typography>
+                <Typography>{t('box')}:{t(box)}</Typography>
+                <Typography className={styles.tags}>{t('tags')}:{tags.map(it => <span key={it} className={styles.tag}><Link to={`/article/tag/${it}`}>{it}</Link></span>)}</Typography>
+                <Typography>{t('feed')}: {feed_title || feed_link || ''}</Typography>
             </div>
         </Paper>
     </div>);

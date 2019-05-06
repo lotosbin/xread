@@ -42,6 +42,17 @@ i18n
                     "Empty": "没有更多内容",
                     "Loading": "加载中",
                     "Error": "出错啦",
+                    "Mark Read": "标记已读",
+                    "Mark Spam": "标记垃圾",
+                    "All": "全部",
+                    "Unread Only": "未读",
+                    "Inbox": "收件箱",
+                    "Spam": "垃圾箱",
+                    "box": "邮箱",
+                    "tags": "标签",
+                    "feed": "频道",
+                    "inbox": "收件箱",
+                    "spam": "垃圾箱",
                 }
             }
         },
