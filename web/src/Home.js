@@ -7,13 +7,13 @@ import TagArticleListContainer from "./components/TagArticleListContainer";
 import TopicArticleListContainer from "./components/TopicArticleListContainer";
 import styles from "./Home.module.css"
 import queryString from 'query-string';
-import SibeBar from "./components/SibeBar";
+import SideBar from "./components/SideBar";
 
 const Home = ({location: {pathname, search}}) => {
 
     return <div className={styles.container}>
         <div className={styles.nav}>
-            <SibeBar/>
+            <SideBar/>
         </div>
         <div className={styles.right}>
             <Subscription subscription={gql`subscription {

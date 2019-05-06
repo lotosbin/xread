@@ -17,12 +17,11 @@ const styles = theme => ({
         backgroundColor: theme.palette.background.paper,
     },
 });
-
 function ListItemLink(props) {
     return <ListItem button component="a" {...props} />;
 }
 
-function SimpleList(props) {
+function SideBar(props) {
     const {classes} = props;
     return (
         <div className={classes.root}>
@@ -56,8 +55,8 @@ function SimpleList(props) {
     );
 }
 
-SimpleList.propTypes = {
+SideBar.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(SimpleList);
+export default withStyles(styles)(SideBar);
