@@ -8,12 +8,13 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import {MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
 import ThemeContext from "./contexts/ThemeContext";
 import './i18n';
+import {ViewModeProvider} from "./contexts";
 
 
 const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
 function MyApp() {
-    const [theme, setTheme] = useState(isDark ? 'dark' : "light");
+    const [theme, setTheme] = useState(localStorage.getItem('theme') || (isDark ? 'dark' : "light"));
 
     const uiTheme = createMuiTheme({
         typography: {
@@ -25,10 +26,18 @@ function MyApp() {
     });
     return (
         <React.Fragment>
-            <ThemeContext.Provider value={{theme, setTheme}}>
+
+            <ThemeContext.Provider value={{
+                theme, setTheme: (theme) => {
+                    setTheme(theme);
+                    localStorage.setItem('theme', theme)
+                }
+            }}>
                 <MuiThemeProvider theme={uiTheme}>
                     <CssBaseline/>
-                    <App/>
+                    <ViewModeProvider>
+                        <App/>
+                    </ViewModeProvider>
                 </MuiThemeProvider>
             </ThemeContext.Provider>
         </React.Fragment>

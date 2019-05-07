@@ -16,15 +16,13 @@ import {ViewModeContext} from "./contexts";
 const Home = ({location: {pathname, search}}) => {
     let {read = "all"} = queryString.parse(search);
     const {t, ready} = useTranslation("", {useSuspense: false});
-    const [mode, setMode] = useState('rich');
-    return <ViewModeContext.Provider value={{mode, setMode}}>
-        <div className={styles.container}>
-            <div className={styles.nav}>
-                <SideBar/>
-            </div>
+    return <div className={styles.container}>
+        <div className={styles.nav}>
+            <SideBar/>
+        </div>
 
-            <div className={styles.right}>
-                <Subscription subscription={gql`subscription {
+        <div className={styles.right}>
+            <Subscription subscription={gql`subscription {
     articleAdded {
         id
         title
@@ -34,21 +32,20 @@ const Home = ({location: {pathname, search}}) => {
         tags
     }
 }`}>
-                    {({data: {articleAdded} = {}, loading}) => articleAdded ? <h4>New article: {!loading && articleAdded.title}</h4> : null}
-                </Subscription>
-                <div>
-                    <ReadFilters/><ViewModeSwitch/>
-                </div>
-                <div className={styles.article_list}>
-                    <Route exact path="/article" component={ArticleListContainer}/>
-                    <Route path="/article/box/:box" component={ArticleListContainer}/>
-                    <Route path="/article/box/:box/read/:read" component={ArticleListContainer}/>
-                    <Route path="/article/tag/:tag" component={TagArticleListContainer}/>
-                    <Route path="/article/topic/:tag" component={TopicArticleListContainer}/>
-                </div>
-
+                {({data: {articleAdded} = {}, loading}) => articleAdded ? <h4>New article: {!loading && articleAdded.title}</h4> : null}
+            </Subscription>
+            <div>
+                <ReadFilters/><ViewModeSwitch/>
             </div>
+            <div className={styles.article_list}>
+                <Route exact path="/article" component={ArticleListContainer}/>
+                <Route path="/article/box/:box" component={ArticleListContainer}/>
+                <Route path="/article/box/:box/read/:read" component={ArticleListContainer}/>
+                <Route path="/article/tag/:tag" component={TagArticleListContainer}/>
+                <Route path="/article/topic/:tag" component={TopicArticleListContainer}/>
+            </div>
+
         </div>
-    </ViewModeContext.Provider>
+    </div>
 };
 export default withRouter(Home);
