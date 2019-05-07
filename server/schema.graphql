@@ -19,7 +19,7 @@ type Viewer{
 type Tag implements Node{
     id:ID!
     name: String!
-    articles(first:Int,after:String,last:Int,before:String):ArticleConnection
+    articles(first:Int,after:String,last:Int,before:String,read:String="all"):ArticleConnection
 }
 type TagConnection {
     pageInfo: PageInfo!
@@ -32,7 +32,7 @@ type TagEdge  {
 type Topic implements Node{
     id:ID!
     name:String!
-    articles(first:Int,after:String,last:Int,before:String):ArticleConnection
+    articles(first:Int,after:String,last:Int,before:String,read:String="all"):ArticleConnection
 }
 type TopicConnection {
     pageInfo: PageInfo!
@@ -67,7 +67,7 @@ type Feed implements Node{
     id:ID!
     link:String!
     title:String
-    articles(first:Int,after:String,last:Int,before:String):ArticleConnection
+    articles(first:Int,after:String,last:Int,before:String,read:String="all"):ArticleConnection
 }
 type FeedConnection {
     pageInfo: PageInfo!
