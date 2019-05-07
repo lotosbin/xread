@@ -27,7 +27,7 @@ export async function getFeeds({first, after, last, before}: TPage) {
     return await getList("feed", {first, after, last, before})
 }
 
-export async function addFeed({link, title}: { link: string, title: string }) {
+export async function addFeed({link, title}: { link: string, title: string }): Promise<any> {
     let database;
     try {
         database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});

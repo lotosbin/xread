@@ -3,7 +3,7 @@ import {createApolloFetch} from "apollo-fetch";
 
 
 const fetch = createApolloFetch({
-    uri: 'http://store.xread.yuanjingtech.com/graphql',
+    uri: process.env.STORE_API_URL || 'http://store.xread.yuanjingtech.com/graphql',
 });
 
 export type TAddFeedToStoreParam = {
