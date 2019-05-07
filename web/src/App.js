@@ -3,13 +3,15 @@ import './App.css';
 import {ApolloProvider} from "react-apollo";
 import client from './apollo/client';
 import {HashRouter as Router, Route} from "react-router-dom";
-import Home from "./Home";
-import Feed from "./Feed";
-import Tag from "./Tag";
-import Topic from "./Topic";
 import {ApolloProvider as ApolloHooksProvider} from 'react-apollo-hooks';
 import AppBar from './components/AppBar'
 import {Advice} from "./components/Advice";
+import loadable from '@loadable/component'
+
+const Home = loadable(() => import('./Home'));
+const Feed = loadable(() => import('./Feed'));
+const Tag = loadable(() => import('./Tag'));
+const Topic = loadable(() => import('./Topic'));
 
 const App = () => (
     <ApolloProvider client={client}>
