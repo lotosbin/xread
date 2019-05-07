@@ -2,14 +2,15 @@ import React from 'react';
 import {Subscription} from "react-apollo";
 import gql from "graphql-tag";
 import ArticleListContainer from "./components/ArticleListContainer";
-import {Link, Route, withRouter} from "react-router-dom";
+import {Route, withRouter} from "react-router-dom";
 import TagArticleListContainer from "./components/TagArticleListContainer";
 import TopicArticleListContainer from "./components/TopicArticleListContainer";
 import styles from "./Home.module.css"
 import SideBar from "./components/SideBar";
 import {useTranslation} from "react-i18next";
-import Button from "@material-ui/core/Button";
 import queryString from "query-string";
+import ReadFilters from "./components/ReadFilters";
+
 const Home = ({location: {pathname, search}}) => {
     let {read = "all"} = queryString.parse(search);
     const {t, ready} = useTranslation("", {useSuspense: false});
@@ -31,8 +32,7 @@ const Home = ({location: {pathname, search}}) => {
                 {({data: {articleAdded} = {}, loading}) => articleAdded ? <h4>New article: {!loading && articleAdded.title}</h4> : null}
             </Subscription>
             <div>
-                <Button color={read === "all" ? "primary" : "default"} component={Link} to={`?read=all`}>{t('All')}</Button>
-                <Button color={read === "unread" ? "primary" : "default"} component={Link} to={`?read=unread`}>{t('Unread Only')}</Button>
+                <ReadFilters/>
             </div>
             <div className={styles.article_list}>
                 <Route exact path="/article" component={ArticleListContainer}/>

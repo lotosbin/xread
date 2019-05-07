@@ -47,6 +47,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "flow-bin": "^0.97.0"
+    "flow-bin": "^0.97.0",
+    "flow-typed": "^2.5.1"
   }
 }
