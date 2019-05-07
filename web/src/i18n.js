@@ -19,6 +19,8 @@ i18n
             en: {
                 translation: {
                     "xRead": "xRead",
+                    "view_mode_rich": "rich",
+                    "view_mode_single_line": "single line",
                 }
             },
             zh: {
@@ -55,6 +57,8 @@ i18n
                     "spam": "垃圾箱",
                     "Read": "已读",
                     "priority": "优先级",
+                    "view_mode_rich": "图文",
+                    "view_mode_single_line": "列表",
                 }
             }
         },

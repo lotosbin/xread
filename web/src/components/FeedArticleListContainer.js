@@ -7,6 +7,7 @@ import {useTranslation} from "react-i18next";
 import QueryContext from "../contexts/QueryContext";
 import ReadFilters from "./ReadFilters";
 import queryString from "query-string";
+import Typography from "@material-ui/core/Typography";
 
 const query = gql`query feed_articles($id:ID!,$cursor: String,$read:String) {
     node(id:$id,type:"Feed"){
@@ -42,8 +43,8 @@ const TopicArticleListContainer = ({location: {search}, match: {params: {feedId}
         <QueryContext.Provider value={{query, variables}}>
             <Query query={query} variables={variables}>
                 {({loading, error, data, fetchMore, refetch}) => {
-                    if (loading) return <p>{t('Loading')}...</p>;
-                    if (error) return <p>{t('Error')} :(</p>;
+                    if (loading) return <Typography component="p">{t('Loading')}...</Typography>;
+                    if (error) return <Typography component="p">{t('Error')} !!!</Typography>;
                     let {node: {articles = {edges: []}} = {}} = data || {};
                     return <div>
                         <ArticleList

@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React from "react";
 import styles from "./ArticleListItem.module.css"
 import moment from "moment";
 import {Link, withRouter} from "react-router-dom";
@@ -11,7 +11,6 @@ import {useMutation} from "react-apollo-hooks";
 import ButtonMarkRead from "./ButtonMarkRead";
 import ButtonMarkSpam from "./ButtonMarkSpam";
 import queryString from "query-string";
-import {ViewModeContext} from "../contexts";
 
 function daysFromNow(date: string) {
     const m = moment(date);  // or whatever start date you have
@@ -51,8 +50,7 @@ let mutationMarkRead = gql`mutation markRead($id:String) {
         id
     }
 }`;
-const ArticleListItem = ({data: {id, title, summary, link, time, tags = [], feed, box, priority}, onClickItem, match: {params: {box: route_box = "all"}}, location: {search},}) => {
-    const {mode: viewMode} = useContext(ViewModeContext);
+const ArticleSingleLineListItem = ({data: {id, title, summary, link, time, tags = [], feed, box, priority}, onClickItem, match: {params: {box: route_box = "all"}}, location: {search},}) => {
     const {t} = useTranslation("", {useSuspense: false});
     let {read = "all"} = queryString.parse(search);
     const markRead = useMutation(mutationMarkRead);
@@ -60,18 +58,17 @@ const ArticleListItem = ({data: {id, title, summary, link, time, tags = [], feed
     let time_moment = moment(time);
     return (<div>
         <Paper elevation={1} className={styles.container} style={{opacity: days2opacity(daysFromNow(time))}} key={id}>
-            <div>
-                {read !== "readed" ? <ButtonMarkRead read={read} id={id}/> : null} {route_box !== "spam" ? <ButtonMarkSpam id={id}/> : null}
-            </div>
-            <div className={viewMode === "single_line" ? styles.title_single_line : styles.title}>
+            <div className={styles.title_single_line}>
                 <Typography variant="h5" onClick={async () => {
                     markRead({variables: {id: id}});
                     window.open(link, '_blank').opener = null
                 }}>{title}</Typography>
-                {viewMode === "single_line" ? <Typography component="p" onClick={() => onClickItem && onClickItem({id})} className={styles.summary_single_line}>{summary}</Typography> : null}
+                <Typography component="p" onClick={() => onClickItem && onClickItem({id})} className={styles.summary_single_line}>{summary}</Typography>
                 <Typography title={time_moment.calendar()}>{time_moment.fromNow()}</Typography>
+                <div>
+                    {read !== "readed" ? <ButtonMarkRead read={read} id={id}/> : null} {route_box !== "spam" ? <ButtonMarkSpam id={id}/> : null}
+                </div>
             </div>
-            {viewMode !== "single_line" ? <Typography component="p" onClick={() => onClickItem && onClickItem({id})} className={styles.summary}>{summary}</Typography> : null}
             <div className={styles.foot}>
                 <Typography>{t('box')}:{t(box)}</Typography>
                 <Typography>{t('priority')}:{t(priority)}</Typography>
@@ -81,4 +78,4 @@ const ArticleListItem = ({data: {id, title, summary, link, time, tags = [], feed
         </Paper>
     </div>);
 };
-export default withRouter(ArticleListItem);
+export default withRouter(ArticleSingleLineListItem);

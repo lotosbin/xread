@@ -13,6 +13,7 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import {useTranslation} from "react-i18next";
+import Typography from "@material-ui/core/Typography";
 
 const query = gql`{
     tags{
@@ -29,8 +30,8 @@ const Tag = () => {
     const [keyword, setKeyword] = useState(null);
     let variables = {};
     const {data: {tags}, fetchMore, refetch, loading, error} = useQuery(query, {variables});
-    if (loading) return (<p>{t('Loading')}...</p>);
-    if (error) return (<p>{t('Error')} !!!</p>);
+    if (loading) return (<Typography component="p">{t('Loading')}...</Typography>);
+    if (error) return (<Typography component="p">{t('Error')} !!!</Typography>);
     var list = tags.edges.map(it => it.node);
     if (keyword) {
         list = list.filter(it => it.name.toLowerCase().indexOf(keyword.toLowerCase()) > -1)

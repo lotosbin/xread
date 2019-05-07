@@ -33,6 +33,7 @@
     "subscriptions-transport-ws": "^0.9.15"
   },
   "scripts": {
+    "watch": "less-watch-compiler --config less-watcher.config.json",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -49,6 +50,8 @@
   ],
   "devDependencies": {
     "flow-bin": "^0.97.0",
-    "flow-typed": "^2.5.1"
+    "flow-typed": "^2.5.1",
+    "less": "^3.9.0",
+    "less-watch-compiler": "^1.13.0"
   }
 }

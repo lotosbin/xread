@@ -8,6 +8,7 @@ import {useTranslation} from "react-i18next";
 import QueryContext from "../contexts/QueryContext";
 import ReadFilters from "./ReadFilters";
 import queryString from "query-string";
+import Typography from "@material-ui/core/Typography";
 
 const query = gql`query tag_articles($tag:ID!,$cursor: String,$read:String) {
     node(id:$tag,type:"Tag"){
@@ -39,8 +40,8 @@ const TagArticleListContainer = ({location: {search}, match: {params: {tag}}}: {
     const {t, ready} = useTranslation("", {useSuspense: false});
     const variables = {tag: tag, cursor: null, read: read};
     const {data: {node = {}} = {}, fetchMore, refetch, loading, error} = useQuery(query, {variables});
-    if (loading) return (<p>{t('Loading')}...</p>);
-    if (error) return (<p>{t('Error')} !!!</p>);
+    if (loading) return (<Typography component="p">{t('Loading')}...</Typography>);
+    if (error) return (<Typography component="p">{t('Error')} !!!</Typography>);
     let {articles} = node || {};
     return <div>
         <div>

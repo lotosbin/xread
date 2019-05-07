@@ -6,6 +6,7 @@ import queryString from "query-string";
 import {fragment_article_list_item} from "./ArticleListItem";
 import {useTranslation} from "react-i18next";
 import QueryContext from "../contexts/QueryContext";
+import Typography from "@material-ui/core/Typography";
 
 let query = gql`query articles($cursor: String="",$box:String="all",$read:String="all") {
     articles(last:10,before: $cursor,box:$box,read:$read) {
@@ -33,8 +34,8 @@ const ArticleListContainer = ({location: {search}, match: {params: {box = "all"}
     let {read = "all"} = queryString.parse(search);
     let variables = {cursor: "", box: box, read: read};
     const {data: {articles}, fetchMore, refetch, loading, error} = useQuery(query, {variables});
-    if (loading) return (<p>{t('Loading')}...</p>);
-    if (error) return (<p>{t('Error')} !!!</p>);
+    if (loading) return (<Typography component="p">{t('Loading')}...</Typography>);
+    if (error) return (<Typography component="p">{t('Error')} !!!</Typography>);
     return <div>
         <QueryContext.Provider value={{query, variables}}>
             <ArticleList
