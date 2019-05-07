@@ -38,7 +38,7 @@ const ArticleListContainer = ({location: {search}, match: {params: {box = "all"}
     return <div>
         <QueryContext.Provider value={{query, variables}}>
             <ArticleList
-                refrech={() => refetch()}
+                refetch={() => refetch()}
                 data={articles.edges.map(it => it.node)}
                 loadMore={() => fetchMore({
                     variables: {

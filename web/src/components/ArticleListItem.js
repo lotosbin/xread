@@ -2,7 +2,6 @@ import React from "react";
 import styles from "./ArticleListItem.module.css"
 import moment from "moment";
 import {Link, withRouter} from "react-router-dom";
-import MaterialLink from '@material-ui/core/Link';
 
 import gql from "graphql-tag";
 import Paper from "@material-ui/core/Paper";
@@ -40,6 +39,7 @@ export const fragment_article_list_item = gql`fragment fragment_article_list_ite
     time
     tags
     box
+    priority
     feed{
         title
         link
@@ -50,8 +50,8 @@ let mutationMarkRead = gql`mutation markRead($id:String) {
         id
     }
 }`;
-const ArticleListItem = ({data: {id, title, summary, link, time, tags = [], feed, box}, onClickItem, match: {params: {box: route_box = "all"}}, location: {search},}) => {
-    const {t, ready} = useTranslation("", {useSuspense: false});
+const ArticleListItem = ({data: {id, title, summary, link, time, tags = [], feed, box, priority}, onClickItem, match: {params: {box: route_box = "all"}}, location: {search},}) => {
+    const {t} = useTranslation("", {useSuspense: false});
     let {read = "all"} = queryString.parse(search);
     const markRead = useMutation(mutationMarkRead);
     let {feed_link, feed_title} = feed || {};
@@ -74,6 +74,7 @@ const ArticleListItem = ({data: {id, title, summary, link, time, tags = [], feed
             </Typography>
             <div className={styles.foot}>
                 <Typography>{t('box')}:{t(box)}</Typography>
+                <Typography>{t('priority')}:{t(priority)}</Typography>
                 <Typography className={styles.tags}>{t('tags')}:{tags.map(it => <span key={it} className={styles.tag}><Link to={`/article/tag/${it}`}>{it}</Link></span>)}</Typography>
                 <Typography>{t('feed')}: {feed_title || feed_link || ''}</Typography>
             </div>
