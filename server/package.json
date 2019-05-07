@@ -12,7 +12,8 @@
     "graphql-tools": "^4.0.4",
     "lodash": "^4.17.11",
     "mongodb": "^3.1.13",
-    "node-fetch": "^2.3.0"
+    "node-fetch": "^2.3.0",
+    "ramda": "^0.26.1"
   },
   "scripts": {
     "start": "babel-node index.js",
@@ -24,6 +25,7 @@
     "@babel/node": "^7.2.2",
     "@babel/preset-env": "^7.3.1",
     "@babel/preset-flow": "^7.0.0",
-    "flow-bin": "^0.97.0"
+    "flow-bin": "^0.97.0",
+    "flow-typed": "^2.5.1"
   }
 }

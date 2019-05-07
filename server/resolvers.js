@@ -1,6 +1,6 @@
 // @flow
 import {makeConnection} from "./relay";
-import {addArticle, addFeed, getArticles, getFeed, getFeeds, getTags, getTopics, markArticleSpam, parseArticleKeywords, readArticle} from "./service";
+import {addArticle, addFeed, getArticles, getFeed, getFeeds, getTags, getTopics, markArticleSpam, parseArticleKeywords, parseArticlePriority, readArticle} from "./service";
 import {PubSub} from "apollo-server";
 import {addFeedToStore} from "./store/service";
 
@@ -53,6 +53,17 @@ const resolvers = {
             } catch (e) {
                 console.log(e);
                 return [];
+            }
+        },
+        priority: async (article) => {
+            if (article.priority) {
+                return article.priority;
+            }
+            try {
+                return await parseArticlePriority(article);
+            } catch (e) {
+                console.log(e);
+                return 0;
             }
         },
         box: async (article,) => {

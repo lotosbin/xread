@@ -4,6 +4,8 @@ import assert from "assert";
 import {keyword, topic} from "./baidu-aip-nlp";
 import type {TKeywordResult, TTopicResult} from "./baidu-aip-nlp";
 
+import * as R from "ramda";
+import {recommend_priority} from "./baidu-aip-easedl";
 export let mongoConnectionString = process.env.MONGO;
 
 export async function getFeed(id: string) {
@@ -14,7 +16,14 @@ export async function getFeed(id: string) {
     return result;
 }
 
-export async function getFeeds({first, after, last, before}) {
+type TPage = {
+    first: number;
+    after: string;
+    last: number;
+    before: string;
+}
+
+export async function getFeeds({first, after, last, before}: TPage) {
     return await getList("feed", {first, after, last, before})
 }
 
@@ -40,7 +49,19 @@ export async function addFeed({link, title}: { link: string, title: string }) {
     }
 }
 
-export async function getArticles(args) {
+type TGetArticlesArgs = {
+    first: number;
+    after: string;
+    last: number;
+    before: string;
+    feedId: string;
+    tag: string;
+    topic: string;
+    box: string;
+    read: string;
+}
+
+export async function getArticles(args: TGetArticlesArgs) {
     console.log(`getArticles:args=${JSON.stringify(args)}`);
     let {first, after, last, before, feedId, tag, topic, box, read = "all"} = args;
     assert(!!first || !!last, "first or last should grate then 0");
@@ -98,7 +119,15 @@ export async function getArticles(args) {
     return result;
 }
 
-export async function addArticle({link, title, summary, time, feedId}) {
+type TAddArticleArgs = {
+    link: string;
+    title: string;
+    summary: string;
+    time: string;
+    feedId: string;
+}
+
+export async function addArticle({link, title, summary, time, feedId}: TAddArticleArgs) {
     let database;
     try {
         database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
@@ -125,7 +154,9 @@ export async function addArticle({link, title, summary, time, feedId}) {
     }
 }
 
-export async function readArticle({id}) {
+type TId = { id: string };
+
+export async function readArticle({id}: TId) {
     let database;
     try {
         database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
@@ -144,7 +175,7 @@ export async function readArticle({id}) {
     }
 }
 
-export async function markArticleSpam({id}) {
+export async function markArticleSpam({id}: TId) {
     let database;
     try {
         database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
@@ -217,6 +248,19 @@ async function addArticleKeywords(id: string, tags: Array<string>) {
     }
 }
 
+async function setArticlePriority(id: string, priority: number) {
+    let database;
+    try {
+        database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
+        let update = {$set: {priority: priority}};
+        const response = await database.db("xread").collection("article").updateOne({_id: new ObjectId(id)}, update);
+    } finally {
+        if (database) {
+            await database.close();
+        }
+    }
+}
+
 async function addArticleTopic(id: string, tag: string) {
     console.log(`addArticleTopic:id=${id},tag=${tag}`);
     let database;
@@ -231,7 +275,16 @@ async function addArticleTopic(id: string, tag: string) {
     }
 }
 
-export async function parseArticleKeywords(article) {
+type TArticle = {
+    id: string;
+    feed: {
+        title: string
+    };
+    summary: string;
+    title: string;
+}
+
+export async function parseArticleKeywords(article: TArticle) {
     const result: TKeywordResult = await keyword(article.summary || "", article.title || "");
     if (result.items) {
         let tags: Array<string> = result.items.map(it => it.tag);
@@ -241,7 +294,29 @@ export async function parseArticleKeywords(article) {
     return []
 }
 
-export async function parseArticleTopic(article): Promise<string | null> {
+export async function parseArticlePriority(article: TArticle): Promise<number> {
+    const priority = await parsePriority(`${article.title}${article.summary}${(article.feed || {}).title}`);
+    (async function () {
+        await setArticlePriority(article.id, priority);
+        if (priority === -1) {
+            await markArticleSpam({id: article.id});
+        }
+    })();
+    return priority;
+}
+
+export async function parsePriority(text: string): Promise<number> {
+    try {
+        const json = await recommend_priority(text);
+        const item = R.reduce(R.maxBy(R.prop('score')), {name: 0, score: 0}, json.result || []);
+        return parseInt(item.name);
+    } catch (e) {
+        console.log(e);
+        return -1;
+    }
+}
+
+export async function parseArticleTopic(article: TArticle): Promise<string | null> {
     try {
         const result: TTopicResult = await topic(article.summary || "", article.title || "");
         if (result.item && result.item.lv1_tag_list && result.item.lv1_tag_list.length) {
@@ -257,7 +332,7 @@ export async function parseArticleTopic(article): Promise<string | null> {
 }
 
 
-export async function getList(collectionName: String, {first, after, last, before}) {
+export async function getList(collectionName: string, {first, after, last, before}: TPage) {
     assert(!!first || !!last, "first or last should grate then 0");
     assert(!(!!first && !!last), 'first or last cannot set same time');
     const database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});

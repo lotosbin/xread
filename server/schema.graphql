@@ -52,6 +52,7 @@ type Article implements Node {
     tags: [String]
     topic: String
     box: String
+    priority: Int!
 }
 
 type ArticleConnection {
