@@ -8,8 +8,8 @@ import {useTranslation} from "react-i18next";
 import QueryContext from "../contexts/QueryContext";
 import Typography from "@material-ui/core/Typography";
 
-let query = gql`query articles($cursor: String="",$box:String="all",$read:String="all") {
-    articles(last:10,before: $cursor,box:$box,read:$read) {
+let query = gql`query articles($cursor: String="",$box:String="all",$read:String="all",$priority:Int) {
+    articles(last:10,before: $cursor,box:$box,read:$read,priority:$priority) {
         pageInfo{
             startCursor
             endCursor
@@ -31,8 +31,8 @@ ${fragment_article_list_item}
 const ArticleListContainer = ({location: {search}, match: {params: {box = "all"}}}) => {
     const {t} = useTranslation("", {useSuspense: false});
 
-    let {read = "all"} = queryString.parse(search);
-    let variables = {cursor: "", box: box, read: read};
+    let {read = "all", priority = "0"} = queryString.parse(search);
+    let variables = {cursor: "", box: box, read: read, priority: parseInt(priority)};
     const {data: {articles}, fetchMore, refetch, loading, error} = useQuery(query, {variables});
     if (loading) return (<Typography component="p">{t('Loading')}...</Typography>);
     if (error) return (<Typography component="p">{t('Error')} !!!</Typography>);
