@@ -94,13 +94,13 @@ export async function keyword(content: string = "", title: string = ""): Promise
         // 调用文章标签
         let trimTitle = trim(title);
         let trimContent = trim(content);
-        if (trimTitle.length > 80) {
+        if (trimTitle.length > 80 / 2) {
             console.warn(`title>80:trimTitle=${trimTitle},title=${title}`)
         }
-        if (trimContent.length > 65535) {
+        if (trimContent.length > 65535 / 2) {
             console.warn(`content>65535:trimContent=${trimContent},content=${content}`)
         }
-        const result = await client.keyword(trimTitle.slice(0, 80), trimContent.slice(0, 65535));
+        const result = await client.keyword(trimTitle.slice(0, 80 / 2), trimContent.slice(0, 65535 / 2));
         console.log(JSON.stringify(result));
         return result;
     } catch (err) {

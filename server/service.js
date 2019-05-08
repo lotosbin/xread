@@ -1,11 +1,12 @@
 // @flow
 import {MongoClient, ObjectId} from "mongodb";
 import assert from "assert";
-import {keyword, topic} from "./baidu-aip-nlp";
 import type {TKeywordResult, TTopicResult} from "./baidu-aip-nlp";
+import {keyword, topic} from "./baidu-aip-nlp";
 
 import * as R from "ramda";
 import {recommend_priority} from "./baidu-aip-easedl";
+
 export let mongoConnectionString = process.env.MONGO;
 
 export async function getFeed(id: string) {
@@ -63,7 +64,7 @@ type TGetArticlesArgs = {
 
 export async function getArticles(args: TGetArticlesArgs) {
     console.log(`getArticles:args=${JSON.stringify(args)}`);
-    let {first, after, last, before, feedId, tag, topic, box, read = "all"} = args;
+    let {first, after, last, before, feedId, tag, topic, box, read = "all", priority} = args;
     assert(!!first || !!last, "first or last should grate then 0");
     assert(!(!!first && !!last), 'first or last cannot set same time');
     const database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
@@ -92,6 +93,9 @@ export async function getArticles(args: TGetArticlesArgs) {
     }
     if (topic) {
         query.topic = topic;
+    }
+    if (priority) {
+        query.priority = priority;
     }
     switch (box) {
         case "inbox":
@@ -248,7 +252,7 @@ async function addArticleKeywords(id: string, tags: Array<string>) {
     }
 }
 
-async function setArticlePriority(id: string, priority: number) {
+export async function setArticlePriority(id: string, priority: number) {
     let database;
     try {
         database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
@@ -275,7 +279,7 @@ async function addArticleTopic(id: string, tag: string) {
     }
 }
 
-type TArticle = {
+export type TArticle = {
     id: string;
     feed: {
         title: string
@@ -294,26 +298,58 @@ export async function parseArticleKeywords(article: TArticle) {
     return []
 }
 
-export async function parseArticlePriority(article: TArticle): Promise<number> {
-    const priority = await parsePriority(`${article.title}${article.summary}${(article.feed || {}).title}`);
-    (async function () {
-        await setArticlePriority(article.id, priority);
-        if (priority === -1) {
-            await markArticleSpam({id: article.id});
+export async function nextParseKeywordsArticle(): Promise<TArticle> {
+    let database;
+    try {
+        database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
+        const articles = await database.db("xread").collection("article").find({tags: {$exists: false}, priority: {$exists: false}}).sort({_id: -1}).limit(1).toArray();
+        const result = R.head(articles);
+        if (result) {
+            result.id = result._id.toString();
         }
-    })();
-    return priority;
+        console.debug(`nextParseKeywordsArticle:${JSON.stringify(result)}`);
+        return result;
+    } finally {
+        if (database) {
+            await database.close();
+        }
+    }
 }
 
-export async function parsePriority(text: string): Promise<number> {
+export async function nextParsePriorityArticle(): Promise<TArticle> {
+    let database;
     try {
-        const json = await recommend_priority(text);
-        const item = R.reduce(R.maxBy(R.prop('score')), {name: 0, score: 0}, json.result || []);
-        return parseInt(item.name);
-    } catch (e) {
-        console.log(e);
-        return -1;
+        database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
+        const articles = await database.db("xread").collection("article").find({spam: {$ne: true}, priority: {$exists: false}}).sort({_id: -1}).limit(1).toArray();
+        const result = R.head(articles);
+        if (result) {
+            result.id = result._id.toString();
+        }
+        console.debug(`nextParsePriorityArticle:${JSON.stringify(result)}`);
+        return result;
+    } finally {
+        if (database) {
+            await database.close();
+        }
     }
+}
+
+export async function parseArticlePriority(article: TArticle): Promise<number> {
+    return await parsePriority(`${article.title}${article.summary}${(article.feed || {}).title}`);
+}
+
+/**
+ * @see http://ai.baidu.com/docs#/EasyDL_TEXT_API/top
+ * */
+export async function parsePriority(text: string): Promise<number> {
+    if (text.length > 4096) {
+        console.warn(`parsePriority: text is large then 4096`)
+    }
+    const json = await recommend_priority(text.slice(0, 4096));
+    const item = R.reduce(R.maxBy(R.prop('score')), {name: 0, score: 0}, json.result || []);
+    const priority = parseInt(item.name);
+    console.debug(`parsePriority:text=${text},priority=${priority}`);
+    return priority;
 }
 
 export async function parseArticleTopic(article: TArticle): Promise<string | null> {

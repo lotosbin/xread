@@ -47,24 +47,10 @@ const resolvers = {
             if (article.tags) {
                 return article.tags;
             }
-            try {
-                let tags = await parseArticleKeywords(article);
-                return tags || [];
-            } catch (e) {
-                console.log(e);
-                return [];
-            }
+            return [];
         },
         priority: async (article) => {
-            if (article.priority) {
-                return article.priority;
-            }
-            try {
-                return await parseArticlePriority(article);
-            } catch (e) {
-                console.log(e);
-                return 0;
-            }
+            return article.priority ? article.priority : 0;
         },
         box: async (article,) => {
             if (article.spam) return "spam";
