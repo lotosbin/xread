@@ -1,5 +1,7 @@
+// @flow
 import fetch from "node-fetch";
 
+import utf8 from "utf8";
 const api_key = process.env.BAIDU_AIP_EASEDL_API_KEY;
 const secret_key = process.env.BAIDU_AIP_EASEDL_SECRET_KEY;
 const url = `https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=${api_key}&client_secret=${secret_key}`;
@@ -36,6 +38,37 @@ export async function getAccessToken() {
     return json.access_token;
 }
 
+/**
+ * @return
+ */
+export async function dataset_add_entity(label: string, name: string, content: string) {
+    console.debug(`dataset_add_entity:name=${name},content=${content}`);
+    const accessToken = await getAccessToken();
+    const url = `https://aip.baidubce.com/rpc/2.0/easydl/dataset/addentity?access_token=${accessToken}`;
+    const response = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({
+            "type": "TEXT_CLASSIFICATION",
+            "dataset_id": "33883",
+            "entity_content": `${utf8.encode(content.slice(0, 10000 / 2))}`,
+            "entity_name": name,
+            "labels": [{"label_name": `${label}`}]
+        })
+    });
+    if (!response.ok) {
+        throw new Error(`${response.statusCode}:${await response.text()}`)
+    }
+    const json = await response.json();
+    /*{
+    log_id: 8538749507596601000,
+    results: [
+     { name: '0', score: 0.7447099685668945 },
+     { name: '1', score: 0.2552900016307831 }
+    ]
+    }*/
+    console.debug(`dataset_add_entity:result=${JSON.stringify(json)}`);
+    return json;
+}
 /**
  * @return
  */

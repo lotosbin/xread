@@ -13,7 +13,8 @@
     "lodash": "^4.17.11",
     "mongodb": "^3.1.13",
     "node-fetch": "^2.3.0",
-    "ramda": "^0.26.1"
+    "ramda": "^0.26.1",
+    "utf8": "^3.0.0"
   },
   "scripts": {
     "start": "babel-node index.js",

@@ -5,7 +5,7 @@ import type {TKeywordResult, TTopicResult} from "./baidu-aip-nlp";
 import {keyword, topic} from "./baidu-aip-nlp";
 
 import * as R from "ramda";
-import {recommend_priority} from "./baidu-aip-easedl";
+import {dataset_add_entity, recommend_priority} from "./baidu-aip-easedl";
 
 export let mongoConnectionString = process.env.MONGO;
 
@@ -60,6 +60,7 @@ type TGetArticlesArgs = {
     topic: string;
     box: string;
     read: string;
+    priority: number;
 }
 
 export async function getArticles(args: TGetArticlesArgs) {
@@ -160,7 +161,7 @@ export async function addArticle({link, title, summary, time, feedId}: TAddArtic
 
 type TId = { id: string };
 
-export async function readArticle({id}: TId) {
+export async function readArticle({id}: TId): Promise<TArticle> {
     let database;
     try {
         database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
@@ -394,4 +395,12 @@ export async function getList(collectionName: string, {first, after, last, befor
     await database.close();
     result.forEach(it => it.id = it._id.toString());
     return result;
+}
+
+export async function try_add_article_to_dataset(article: TArticle, label: string) {
+    try {
+        await dataset_add_entity(label, `${article.id}`, `${article.title}${article.summary}${(article.feed || {}).title || ""}`);
+    } catch (e) {
+        console.error(e)
+    }
 }

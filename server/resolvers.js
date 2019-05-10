@@ -1,12 +1,14 @@
 // @flow
 import {makeConnection} from "./relay";
-import {addArticle, addFeed, getArticles, getFeed, getFeeds, getTags, getTopics, markArticleSpam, parseArticleKeywords, parseArticlePriority, readArticle} from "./service";
+import {addArticle, addFeed, getArticles, getFeed, getFeeds, getTags, getTopics, markArticleSpam, readArticle, try_add_article_to_dataset} from "./service";
 import {PubSub} from "apollo-server";
 import {addFeedToStore} from "./store/service";
+import {tryCatch} from "ramda";
 
 const ARTICLE_ADDED = "ARTICLE_ADDED";
 const FEED_ADDED = "FEED_ADDED";
 const pubsub = new PubSub();
+
 
 const resolvers = {
     Node: {
@@ -112,10 +114,16 @@ const resolvers = {
             return feed;
         },
         markReaded: async (root, args, context) => {
-            return await readArticle(args);
+            const article = await readArticle(args);
+            // noinspection JSIgnoredPromiseFromCall
+            try_add_article_to_dataset(article, "1");
+            return article;
         },
         markSpam: async (root, args, context) => {
-            return await markArticleSpam(args);
+            const article = await markArticleSpam(args);
+            // noinspection JSIgnoredPromiseFromCall
+            try_add_article_to_dataset(article, "-1");
+            return article;
         },
     },
     Subscription: {
