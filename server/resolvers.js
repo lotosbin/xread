@@ -24,7 +24,20 @@ const resolvers = {
                 }
             }
             return null
-        }
+        },
+        __typename: (obj, context, info) => {
+            if (obj.__type) return obj.__type;
+            if (obj.name) {
+                return "Tag"
+            } else if (obj.title) {
+                if (obj.summary) {
+                    return "Article"
+                } else {
+                    return "Feed"
+                }
+            }
+            return null
+        },
     },
     Tag: {
         articles: async (parent, args, context) => {
