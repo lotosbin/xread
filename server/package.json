@@ -11,6 +11,7 @@
     "graphql": "^14.1.1",
     "graphql-tools": "^4.0.4",
     "lodash": "^4.17.11",
+    "moment": "^2.24.0",
     "mongodb": "^3.1.13",
     "node-fetch": "^2.3.0",
     "ramda": "^0.26.1",
