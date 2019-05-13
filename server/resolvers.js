@@ -42,8 +42,8 @@ const resolvers = {
         summary: ({summary = ""}) => {
             return summary.replace(/<[^>]+>/g, "")
         },
-        feed: ({id}, args, {}) => {
-            return getFeed(id)
+        feed: ({feedId}, args, {}) => {
+            return getFeed(feedId)
         },
         tags: async (article,) => {
             if (article.tags) {
