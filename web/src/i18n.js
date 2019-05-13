@@ -60,6 +60,7 @@ i18n
                     "view_mode_rich": "图文",
                     "view_mode_single_line": "列表",
                     "Guess Read": "猜你会读",
+                    "Guess Normal": "普通邮件",
                     "Guess Spam": "猜是垃圾",
                     "No More Content": "没有更多内容",
                     "Mark All Spam": "全部标记垃圾",

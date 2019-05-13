@@ -26,21 +26,26 @@ const SideBar = () => {
             </List>
             <Divider/>
             <List component="nav">
-                <ListItem button component={Link} to={`/article/box/inbox?priority=1`}>
-                    <ListItemText primary={t("Guess Read")}/>
-                </ListItem>
+
                 <ListItem button component={Link} to={`/article/box/inbox`}>
                     <ListItemIcon>
                         <InboxIcon/>
                     </ListItemIcon>
                     <ListItemText primary={t("Inbox")}/>
                 </ListItem>
-            </List>
-            <Divider/>
-            <List component="nav">
+                <ListItem button component={Link} to={`/article/box/inbox?priority=1`}>
+                    <ListItemText primary={t("Guess Read")}/>
+                </ListItem>
+                <ListItem button component={Link} to={`/article/box/inbox?priority=0`}>
+                    <ListItemText primary={t("Guess Normal")}/>
+                </ListItem>
                 <ListItem button component={Link} to={`/article/box/inbox?priority=-1`}>
                     <ListItemText primary={t("Guess Spam")}/>
                 </ListItem>
+            </List>
+            <Divider/>
+            <List component="nav">
+
                 <ListItem button component={Link} to={`/article/box/spam`}>
                     <ListItemText primary={t("Spam")}/>
                 </ListItem>

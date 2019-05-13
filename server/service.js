@@ -60,12 +60,12 @@ type TGetArticlesArgs = {
     topic: string;
     box: string;
     read: string;
-    priority: number;
+    priority: number | null;
 }
 
 export async function getArticles(args: TGetArticlesArgs) {
     console.log(`getArticles:args=${JSON.stringify(args)}`);
-    let {first, after, last, before, feedId, tag, topic, box, read = "all", priority} = args;
+    let {first, after, last, before, feedId, tag, topic, box, read = "all", priority = null} = args;
     assert(!!first || !!last, "first or last should grate then 0");
     assert(!(!!first && !!last), 'first or last cannot set same time');
     const database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
@@ -95,7 +95,7 @@ export async function getArticles(args: TGetArticlesArgs) {
     if (topic) {
         query.topic = topic;
     }
-    if (priority) {
+    if (priority != null) {
         query.priority = priority;
     }
     switch (box) {
