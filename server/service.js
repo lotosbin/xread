@@ -145,8 +145,6 @@ export async function addArticle({link, title, summary, time, feedId}: TAddArtic
         const result = await database.db("xread").collection("article").findOne(filter);
         if (result) {
             result.id = result._id.toString();
-            // parseArticleKeywords(result).catch(error => console.error(error));
-            parseArticleTopic(result)
         }
         return result;
     } catch (e) {
@@ -267,7 +265,7 @@ export async function setArticlePriority(id: string, priority: number) {
 }
 
 async function addArticleTopic(id: string, tag: string) {
-    console.log(`addArticleTopic:id=${id},tag=${tag}`);
+    console.log(`addArticleTopic:id=${id},topic=${tag}`);
     let database;
     try {
         database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
@@ -353,9 +351,28 @@ export async function parsePriority(text: string): Promise<number> {
     return priority;
 }
 
+export async function nextParseTopicArticle(): Promise<TArticle> {
+    let database;
+    try {
+        database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
+        const articles = await database.db("xread").collection("article").find({topic: {$exists: false}}).sort({_id: -1}).limit(1).toArray();
+        const result = R.head(articles);
+        if (result) {
+            result.id = result._id.toString();
+        }
+        console.debug(`nextParseTopicArticle:${JSON.stringify(result)}`);
+        return result;
+    } finally {
+        if (database) {
+            await database.close();
+        }
+    }
+}
 export async function parseArticleTopic(article: TArticle): Promise<string | null> {
     try {
-        const result: TTopicResult = await topic(article.summary || "", article.title || "");
+        const content = article.summary || article.title || "内容为空";//内容为空 防止接口报错，无法继续处理
+        const title = article.title || "";
+        const result: TTopicResult = await topic(content, title);
         if (result.item && result.item.lv1_tag_list && result.item.lv1_tag_list.length) {
             const tag: string = result.item.lv1_tag_list[0].tag;
             await addArticleTopic(article.id, tag);

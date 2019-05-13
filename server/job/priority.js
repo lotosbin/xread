@@ -14,7 +14,8 @@ export async function runParseArticlePriority() {
         while (article) {
             const priority = await parseArticlePriority(article);
             await setArticlePriority(article.id, priority);
-            article = await nextParsePriorityArticle()
+            article = await nextParsePriorityArticle();
+            await sleep(200);//防止 QPS 超限制
         }
     } catch (e) {
         console.error(e.message, e);
