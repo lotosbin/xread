@@ -7,6 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import {useTranslation} from "react-i18next";
 import {ViewModeContext} from "../contexts";
 import ArticleSingleLineListItem from "./ArticleSingleLineListItem";
+import ButtonAllMarkSpam from "./ButtonAllMarkSpam";
 
 type TArticleListProps = {
     data: {};
@@ -32,11 +33,15 @@ const ArticleList = ({data = {}, loadMore, refetch, onClickItem}: TArticleListPr
             }
         })}
         <div className={styles.more_container}>
-            {articles.length
-                ? (hasNextPage
-                    ? <Button className={styles.more} variant="outlined" onClick={loadMore}> {t('More')} </Button>
-                    : <Typography>{t('No More Content')}</Typography>)
-                : <Typography>{t('Empty')}</Typography>}
+            <div><ButtonAllMarkSpam ids={articles.map(it => it.id)}/></div>
+            <div>
+                {articles.length
+                    ? (hasNextPage
+                        ? <Button className={styles.more} variant="outlined" onClick={loadMore}> {t('More')} </Button>
+                        : <Typography>{t('No More Content')}</Typography>)
+                    : <Typography>{t('Empty')}</Typography>}
+            </div>
+            <div></div>
         </div>
     </div>;
 };

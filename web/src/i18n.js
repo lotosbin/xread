@@ -62,6 +62,7 @@ i18n
                     "Guess Read": "猜你会读",
                     "Guess Spam": "猜是垃圾",
                     "No More Content": "没有更多内容",
+                    "Mark All Spam": "全部标记垃圾",
                 }
             }
         },
