@@ -40,7 +40,7 @@ const ArticleListContainer = ({location: {search}, match: {params: {box = "all"}
         <QueryContext.Provider value={{query, variables}}>
             <ArticleList
                 refetch={() => refetch()}
-                data={articles.edges.map(it => it.node)}
+                data={articles}
                 loadMore={() => fetchMore({
                     variables: {
                         cursor: articles.pageInfo.endCursor

@@ -34,7 +34,8 @@ const query = gql`query tag_articles($tag:ID!,$cursor: String,$read:String="all"
 }
 ${fragment_article_list_item}
 `;
-const TopicArticleListContainer = ({location: {search}, match: {params: {tag}}}) => {
+type TProps = {}
+const TopicArticleListContainer = ({location: {search}, match: {params: {tag}}}: TProps) => {
     let {read = "unread"} = queryString.parse(search);
     const {t, ready} = useTranslation("", {useSuspense: false});
     const variables = {tag: tag, cursor: null, read: read};
@@ -49,7 +50,7 @@ const TopicArticleListContainer = ({location: {search}, match: {params: {tag}}})
         <QueryContext.Provider value={{query, variables}}>
             <ArticleList
                 refrech={() => refetch()}
-                data={articles.edges.map(it => it.node)}
+                data={articles}
                 loadMore={() => fetchMore({
                     variables: {
                         cursor: articles.pageInfo.endCursor

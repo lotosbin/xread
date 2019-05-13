@@ -50,7 +50,7 @@ const TagArticleListContainer = ({location: {search}, match: {params: {tag}}}: {
         <QueryContext.Provider value={{query, variables}}>
             <ArticleList
                 refrech={() => refetch()}
-                data={articles.edges.map(it => it.node)}
+                data={articles}
                 loadMore={() => fetchMore({
                     variables: {
                         cursor: articles.pageInfo.endCursor

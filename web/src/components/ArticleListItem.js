@@ -42,6 +42,7 @@ export const fragment_article_list_item = gql`fragment fragment_article_list_ite
     box
     priority
     feed{
+        id
         title
         link
     }

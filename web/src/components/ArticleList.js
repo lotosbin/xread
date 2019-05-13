@@ -9,12 +9,14 @@ import {ViewModeContext} from "../contexts";
 import ArticleSingleLineListItem from "./ArticleSingleLineListItem";
 
 type TArticleListProps = {
-    data: [];
+    data: {};
     refetch: ()=>{};
     loadMore: ()=>{};
     onClickItem: ()=>{};
 }
-const ArticleList = ({data: articles = [], loadMore, refetch, onClickItem}: TArticleListProps) => {
+const ArticleList = ({data = {}, loadMore, refetch, onClickItem}: TArticleListProps) => {
+    const articles = (data.edges || []).map(it => it.node);
+    const {hasNextPage = false, hasPreviousPage = true} = data.pageInfo || {};
     const {t, ready} = useTranslation("", {useSuspense: false});
     const {mode: viewMode} = useContext(ViewModeContext);
     return <div className={styles.container}>
@@ -30,7 +32,11 @@ const ArticleList = ({data: articles = [], loadMore, refetch, onClickItem}: TArt
             }
         })}
         <div className={styles.more_container}>
-            {articles.length ? <Button className={styles.more} variant="outlined" onClick={loadMore}> {t('More')} </Button> : <Typography>{t('Empty')}</Typography>}
+            {articles.length
+                ? (hasNextPage
+                    ? <Button className={styles.more} variant="outlined" onClick={loadMore}> {t('More')} </Button>
+                    : <Typography>{t('No More Content')}</Typography>)
+                : <Typography>{t('Empty')}</Typography>}
         </div>
     </div>;
 };

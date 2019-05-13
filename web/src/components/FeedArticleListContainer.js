@@ -45,7 +45,7 @@ const TopicArticleListContainer = ({location: {search}, match: {params: {feedId}
         <QueryContext.Provider value={{query, variables}}>
             <ArticleList
                 refrech={() => refetch()}
-                data={articles.edges.map(it => it.node)}
+                data={articles}
                 loadMore={() => fetchMore({
                     variables: {
                         cursor: articles.pageInfo.endCursor
@@ -59,8 +59,10 @@ const TopicArticleListContainer = ({location: {search}, match: {params: {feedId}
                                 // Put the new comments at the end of the list and update `pageInfo`
                                 // so we have the new `endCursor` and `hasNextPage` values
                                 node: {
+                                    ...previousResult.node,
                                     articles: {
-                                        __typename: previousResult.node.articles.__typename,
+                                        ...previousResult.node.articles,
+                                        // __typename: previousResult.node.articles.__typename,
                                         edges: [...previousResult.node.articles.edges, ...newEdges],
                                         pageInfo
                                     }

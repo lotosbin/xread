@@ -61,6 +61,7 @@ i18n
                     "view_mode_single_line": "列表",
                     "Guess Read": "猜你会读",
                     "Guess Spam": "猜是垃圾",
+                    "No More Content": "没有更多内容",
                 }
             }
         },
