@@ -345,7 +345,8 @@ export async function parsePriority(text: string): Promise<number> {
         console.warn(`parsePriority: text is large then 4096`)
     }
     const json = await recommend_priority(text.slice(0, 4096));
-    const item = R.reduce(R.maxBy(R.prop('score')), {name: 0, score: 0}, json.result || []);
+    const isGood = n => n.score > 0.8;
+    const item = R.reduce(R.maxBy(R.prop('score')), {name: 0, score: 0}, R.filter(isGood, json.result || json.results || []));
     const priority = parseInt(item.name);
     console.debug(`parsePriority:text=${text},priority=${priority}`);
     return priority;
