@@ -14,4 +14,5 @@
 .right {
     flex: 1;
     overflow-y: scroll;
+    min-height: 0;
 }

@@ -10,6 +10,7 @@ import type {FeedListDataItem} from "./components/FeedList";
 import Button from "@material-ui/core/Button";
 import {useTranslation} from "react-i18next";
 import Typography from "@material-ui/core/Typography";
+import ReadFilters from "./components/ReadFilters";
 
 const query = gql`{
     feeds(last:100){
@@ -63,6 +64,9 @@ const Feed = ({history}) => {
             </div>
         </div>
         <div className={styles.right}>
+            <div>
+                <ReadFilters/>
+            </div>
             <Route path={`/feed/:feedId/article`} component={FeedArticleListContainer}/>
             <Route path="/feed/subscribe" component={FeedSubscribeContainer}/>
         </div>
