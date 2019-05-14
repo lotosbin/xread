@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import React from "react";
+import React, {useEffect} from "react";
 import ArticleList from "./ArticleList";
 import {useQuery} from "react-apollo-hooks";
 import queryString from "query-string";
@@ -33,7 +33,20 @@ const ArticleListContainer = ({location: {search}, match: {params: {box = "all"}
 
     let {read = "all", priority = "0"} = queryString.parse(search);
     let variables = {cursor: "", box: box, read: read, priority: parseInt(priority)};
-    const {data: {articles}, fetchMore, refetch, loading, error} = useQuery(query, {variables});
+    const {data, fetchMore, refetch, loading, error} = useQuery(query, {variables});
+    const {articles = {}} = data;
+    const {edges = [], pageInfo = {}} = articles;
+    useEffect(() => {
+        const run = async () => {
+            console.log(`useEffect run:${(edges || []).length},${pageInfo.hasNextPage}`);
+            console.dir(data);
+            if (edges.length === 0 && pageInfo.hasNextPage) {
+                console.log(`useEffect run refetch`);
+                refetch();
+            }
+        };
+        run()
+    }, [data]);
     if (loading) return (<Typography component="p">{t('Loading')}...</Typography>);
     if (error) return (<Typography component="p">{t('Error')} !!!</Typography>);
     return <div>
