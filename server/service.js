@@ -8,8 +8,12 @@ import * as R from "ramda";
 import {dataset_add_entity, recommend_priority} from "./baidu-aip-easedl";
 
 export let mongoConnectionString = process.env.MONGO;
+type TFeed = {
+    id: string;
+}
 
-export async function getFeed(id: string) {
+export async function getFeed(id: string | null): Promise<TFeed | null> {
+    if (!id) return null;
     const database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
     const result = await database.db("xread").collection("feed").findOne({_id: new ObjectId(id)});
     await database.close();
@@ -283,8 +287,12 @@ export type TArticle = {
     feed: {
         title: string
     };
-    summary: string;
+    summary: string | null;
     title: string;
+    feedId: string | null;
+    tags: Array<string>;
+    priority: number;
+    spam: boolean;
 }
 
 export async function parseArticleKeywords(article: TArticle) {

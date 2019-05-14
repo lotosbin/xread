@@ -4,6 +4,7 @@ import {addArticle, addFeed, getArticles, getFeed, getFeeds, getTags, getTopics,
 import {PubSub} from "apollo-server";
 import {addFeedToStore} from "./store/service";
 import {tryCatch} from "ramda";
+import type {TArticle} from "./service";
 
 const ARTICLE_ADDED = "ARTICLE_ADDED";
 const FEED_ADDED = "FEED_ADDED";
@@ -52,22 +53,22 @@ const resolvers = {
         },
     },
     Article: {
-        summary: ({summary = ""}) => {
-            return summary.replace(/<[^>]+>/g, "")
+        summary: ({summary}: TArticle) => {
+            return (summary || "").replace(/<[^>]+>/g, "")
         },
-        feed: ({feedId}, args, {}) => {
+        feed: ({feedId}: TArticle, args, {}) => {
             return getFeed(feedId)
         },
-        tags: async (article,) => {
+        tags: async (article: TArticle,) => {
             if (article.tags) {
                 return article.tags;
             }
             return [];
         },
-        priority: async (article) => {
+        priority: async (article: TArticle) => {
             return article.priority ? article.priority : 0;
         },
-        box: async (article,) => {
+        box: async (article: TArticle,) => {
             if (article.spam) return "spam";
             return "inbox"
         }
