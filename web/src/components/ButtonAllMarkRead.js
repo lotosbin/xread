@@ -52,6 +52,6 @@ const ButtonAllMarkRead = ({ids = [], read}: { ids: Array<string> }) => {
                 }
             }
         }));
-    }} variant="outlined" color="secondary">{t('Mark All Read')}</Button>
+    }} variant="outlined" color="primary">{t('Mark All Read')}</Button>
 };
 export default ButtonAllMarkRead;
