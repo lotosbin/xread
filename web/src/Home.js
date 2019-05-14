@@ -18,7 +18,7 @@ const Home = ({location: {pathname, search}}) => {
     const {t, ready} = useTranslation("", {useSuspense: false});
     return <div className={styles.container}>
         <div className={styles.nav}>
-            <SideBar/>
+            <SideBar location={{search}}/>
         </div>
 
         <div className={styles.right}>

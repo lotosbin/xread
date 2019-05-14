@@ -4,7 +4,7 @@ import React, {Fragment} from "react";
 import Button from "@material-ui/core/Button";
 import {Link, withRouter} from "react-router-dom";
 
-function query_set(key: string, value: any, search: URLSearchParams) {
+export function query_set(key: string, value: any, search: URLSearchParams) {
     search.set(key, value);
     return search;
 }

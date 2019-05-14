@@ -8,12 +8,9 @@ import InboxIcon from '@material-ui/icons/Inbox';
 import {Link} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import styles from './SideBar.module.css'
-
-function ListItemLink(props) {
-    return <ListItem button component="a" {...props} />;
-}
-
-const SideBar = () => {
+import {query_set} from "./ReadFilters";
+const SideBar = ({location: {search}}) => {
+    const searchParams = new URLSearchParams(search);
     const {t} = useTranslation("", {useSuspense: false});
     return (
         <div className={styles.root}>
@@ -33,13 +30,13 @@ const SideBar = () => {
                     </ListItemIcon>
                     <ListItemText primary={t("Inbox")}/>
                 </ListItem>
-                <ListItem button component={Link} to={`/article/box/inbox?priority=1`}>
+                <ListItem button component={Link} to={`/article/box/inbox?${query_set('priority', '1', searchParams)}`}>
                     <ListItemText primary={t("Guess Read")}/>
                 </ListItem>
-                <ListItem button component={Link} to={`/article/box/inbox?priority=0`}>
+                <ListItem button component={Link} to={`/article/box/inbox?${query_set('priority', '0', searchParams)}`}>
                     <ListItemText primary={t("Guess Normal")}/>
                 </ListItem>
-                <ListItem button component={Link} to={`/article/box/inbox?priority=-1`}>
+                <ListItem button component={Link} to={`/article/box/inbox?${query_set('priority', '-1', searchParams)}`}>
                     <ListItemText primary={t("Guess Spam")}/>
                 </ListItem>
             </List>
