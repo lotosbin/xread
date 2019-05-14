@@ -8,6 +8,7 @@ import {useTranslation} from "react-i18next";
 import {ViewModeContext} from "../contexts";
 import ArticleSingleLineListItem from "./ArticleSingleLineListItem";
 import ButtonAllMarkSpam from "./ButtonAllMarkSpam";
+import ButtonAllMarkRead from "./ButtonAllMarkRead";
 
 type TArticleListProps = {
     data: {};
@@ -33,7 +34,10 @@ const ArticleList = ({data = {}, loadMore, refetch, onClickItem}: TArticleListPr
             }
         })}
         <div className={styles.more_container}>
-            <div><ButtonAllMarkSpam ids={articles.map(it => it.id)}/></div>
+            <div>
+                <ButtonAllMarkSpam ids={articles.map(it => it.id)}/>
+                <ButtonAllMarkRead ids={articles.map(it => it.id)}/>
+            </div>
             <div>
                 {articles.length
                     ? (hasNextPage
