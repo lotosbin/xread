@@ -8,7 +8,7 @@ import InboxIcon from '@material-ui/icons/Inbox';
 import {Link} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import styles from './SideBar.module.css'
-import {query_set} from "./ReadFilters";
+import {query_set} from "../utils";
 const SideBar = ({location: {search}}) => {
     const searchParams = new URLSearchParams(search);
     const {t} = useTranslation("", {useSuspense: false});
