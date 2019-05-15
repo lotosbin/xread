@@ -171,7 +171,7 @@ export async function recommend_priority(text: string) {
     const response = await fetch(url, {
         method: 'POST',
         body: JSON.stringify({
-            "text": `${text}`,
+            "text": `${text || "empty"}`,
             "top_num": 6
         })
     });
@@ -213,7 +213,7 @@ export async function recommend_priority_debug(text: string) {
         "referrerPolicy": "no-referrer-when-downgrade",
         body: JSON.stringify({
             "modelId": 28810,
-            "iterationId": 39956,
+            "iterationId": 40212,
             "type": 4,
             "entity": `${text}`,
             "method": "model/verify"

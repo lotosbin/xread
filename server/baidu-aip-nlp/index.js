@@ -61,7 +61,7 @@ export async function topic(content: string, title: string): Promise<TTopicResul
         if (trimContent.length > 65535) {
             console.warn(`content>65535:trimContent=${trimContent},content=${content}`)
         }
-        const result = await client.topic(trimTitle.slice(0, 80 / 2), trimContent.slice(0, 65535 / 2));
+        const result = await client.topic(trimTitle.slice(0, 80 / 2) || "empty", trimContent.slice(0, 65535 / 2) || "empty");
         console.log(JSON.stringify(result));
         return result;
     } catch (err) {
