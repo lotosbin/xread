@@ -1,9 +1,12 @@
 # xread
+
+[![Join the chat at https://gitter.im/yuanjing-xread/community](https://badges.gitter.im/yuanjing-xread/community.svg)](https://gitter.im/yuanjing-xread/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 another rss reader
 react react-native graphql rss reader
 
 qq群: 631376463
-
+建议：[![Feature Requests](http://feathub.com/lotosbin/xread?format=svg)](http://feathub.com/lotosbin/xread) [![Join the chat at https://gitter.im/lotosbin/xread](https://badges.gitter.im/lotosbin/xread.svg)](https://gitter.im/lotosbin/xread?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 # DEV
 
 - mongo
