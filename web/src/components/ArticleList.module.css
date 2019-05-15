@@ -1,6 +1,7 @@
 .container {
     height: 100%;
-    overflow: auto;
+    min-height: 0;
+    overflow-y: scroll;
 }
 
 .refetch_container{

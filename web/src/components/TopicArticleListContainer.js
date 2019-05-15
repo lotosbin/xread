@@ -43,7 +43,7 @@ const TopicArticleListContainer = ({location: {search}, match: {params: {tag}}}:
     if (loading) return (<Typography component="p">{t('Loading')}...</Typography>);
     if (error) return (<Typography component="p">{t('Error')} !!!</Typography>);
     let {articles} = (data || {}).node || {};
-    return <div>
+    return <div style={{height: '100%'}}>
         <div>
             <ReadFilters/>
         </div>
