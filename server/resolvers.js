@@ -4,12 +4,17 @@ import {addArticle, addFeed, getArticles, getFeed, getFeeds, getTags, getTopics,
 import {PubSub} from "apollo-server";
 import {addFeedToStore} from "./store/service";
 import {tryCatch} from "ramda";
-import type {TArticle} from "./service";
+import type {TArticle, TSeries} from "./service";
 
 const ARTICLE_ADDED = "ARTICLE_ADDED";
 const FEED_ADDED = "FEED_ADDED";
 const pubsub = new PubSub();
-
+type TArticleEdge = {
+    node: TArticle
+}
+type TArticleConnection = {
+    edges: [TArticleEdge]
+}
 
 const resolvers = {
     Node: {
@@ -71,6 +76,21 @@ const resolvers = {
         box: async (article: TArticle,) => {
             if (article.spam) return "spam";
             return "inbox"
+        },
+        series: async ({seriesId}: TArticle, args, context): Promise<TSeries | null> => {
+            if (!seriesId) {
+                return null
+            }
+            return {
+                id: seriesId,
+                title: seriesId,
+            }
+        }
+    },
+    Series: {
+        articles: async (series: TSeries, args, context): Promise<TArticleConnection> => {
+            console.debug(`resolve:series:args=${JSON.stringify(args)}`);
+            return await makeConnection(getArticles)({...args, seriesId: series.id});
         }
     },
     Feed: {

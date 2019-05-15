@@ -16,10 +16,13 @@ type PageInfo {
 type Viewer{
     username: String
 }
+input ArticleInput {
+    keyword: String,
+}
 type Tag implements Node{
     id:ID!
     name: String!
-    articles(first:Int,after:String,last:Int,before:String,box:String,read:String="all",priority:Int=0):ArticleConnection
+    articles(first:Int,after:String,last:Int,before:String,box:String,read:String="all",priority:Int=0,search:ArticleInput):ArticleConnection
 }
 type TagConnection {
     pageInfo: PageInfo!
@@ -32,7 +35,7 @@ type TagEdge  {
 type Topic implements Node{
     id:ID!
     name:String!
-    articles(first:Int,after:String,last:Int,before:String,box:String,read:String="all",priority:Int=0):ArticleConnection
+    articles(first:Int,after:String,last:Int,before:String,box:String,read:String="all",priority:Int=0,search:ArticleInput):ArticleConnection
 }
 type TopicConnection {
     pageInfo: PageInfo!
@@ -41,6 +44,11 @@ type TopicConnection {
 type TopicEdge  {
     cursor: String!
     node: Topic!
+}
+type Series implements Node{
+    id:ID!
+    title:String
+    articles(first:Int,after:String,last:Int,before:String,box:String,read:String="all",priority:Int=0,search:ArticleInput): ArticleConnection
 }
 type Article implements Node {
     id: ID!
@@ -53,6 +61,7 @@ type Article implements Node {
     topic: String
     box: String
     priority: Int!
+    series: Series
 }
 
 type ArticleConnection {
@@ -68,7 +77,7 @@ type Feed implements Node{
     id:ID!
     link:String!
     title:String
-    articles(first:Int,after:String,last:Int,before:String,box:String,read:String="all",priority:Int=0):ArticleConnection
+    articles(first:Int,after:String,last:Int,before:String,box:String,read:String="all",priority:Int=0,search:ArticleInput):ArticleConnection
 }
 type FeedConnection {
     pageInfo: PageInfo!
@@ -82,7 +91,7 @@ type FeedEdge  {
 # The "Query" type is the root of all GraphQL queries.
 # (A "Mutation" type will be covered later on.)
 type Query {
-    articles(first:Int,after:String,last:Int,before:String,box:String,read:String="all",priority:Int=0): ArticleConnection
+    articles(first:Int,after:String,last:Int,before:String,box:String,read:String="all",priority:Int=0,search:ArticleInput): ArticleConnection
     viewer: Viewer
     node(id: ID!,type:String): Node
     feeds(first:Int,after:String,last:Int,before:String):FeedConnection

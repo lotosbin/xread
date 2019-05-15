@@ -1,6 +1,6 @@
 // @flow
 import {topic, keyword, newsSummary} from "./baidu-aip-nlp";
-import {getAllTags, nextParsePriorityArticle, parsePriority} from "./service";
+import {getAllTags, nextParsePriorityArticle, parsePriority, parseSeriesArticle} from "./service";
 import {addFeedToStore} from "./store/service";
 import {dataset_add_entity, dataset_list, dataset_today, getAccessToken, recommend_priority, recommend_priority_debug} from "./baidu-aip-easedl";
 import {runParseArticlePriority} from "./job/priority";
@@ -25,7 +25,8 @@ import {runParseArticleTopic} from "./job/topic";
     // await runParseArticleTopic();
     // var json = await runParseArticleTopic();
     // const json = await dataset_add_entity("-1", "aaaaaa", "服务器内部错误，请再次请求， 如果持续出现此类错误，请通过QQ群（649285136）或工单联系技术支持团队。\\n");
-    var json = await dataset_today();
-    console.log(json);
-    setInterval(runParseArticlePriority, 5000);
+    // var json = await dataset_today();
+    // console.log(json);
+    // setInterval(runParseArticlePriority, 5000);
+    await parseSeriesArticle();
 })();
