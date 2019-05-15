@@ -65,15 +65,10 @@ const ArticleSingleLineListItem = ({data: {id, title, summary, link, time, tags 
                 }}>{title}</Typography>
                 <Typography component="p" onClick={() => onClickItem && onClickItem({id})} className={styles.summary_single_line}>{summary}</Typography>
                 <Typography title={time_moment.calendar()}>{time_moment.fromNow()}</Typography>
+                <Typography>{t('feed')}: {feed_title || feed_link || ''}</Typography>
                 <div>
                     {read !== "readed" ? <ButtonMarkRead read={read} id={id}/> : null} {route_box !== "spam" ? <ButtonMarkSpam id={id}/> : null}
                 </div>
-            </div>
-            <div className={styles.foot}>
-                <Typography>{t('box')}:{t(box)}</Typography>
-                <Typography>{t('priority')}:{t(priority)}</Typography>
-                <Typography className={styles.tags}>{t('tags')}:{tags.map(it => <span key={it} className={styles.tag}><Link to={`/article/tag/${it}`}>{it}</Link></span>)}</Typography>
-                <Typography>{t('feed')}: {feed_title || feed_link || ''}</Typography>
             </div>
         </Paper>
     </div>);
