@@ -49,6 +49,7 @@ const resolvers = {
         },
     },
     Article: {
+        id: (parent) => parent._id,
         summary: ({summary}: TArticle) => {
             return (summary || "").replace(/<[^>]+>/g, "")
         },
@@ -85,6 +86,7 @@ const resolvers = {
         }
     },
     Feed: {
+        id: (parent) => parent._id,
         articles: async (parent, args, context) => await makeConnection(getArticles)({...args, feedId: parent.id}),
     },
     Query: {
