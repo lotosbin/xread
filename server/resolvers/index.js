@@ -1,20 +1,11 @@
-// @flow
-import {makeConnection} from "./relay";
-import {addArticle, addFeed, getArticles, getFeed, getFeeds, getTags, getTopics, markArticleSpam, readArticle, try_add_article_to_dataset} from "./service";
-import {PubSub} from "apollo-server";
-import {addFeedToStore} from "./store/service";
+// @flow weak
+import {makeConnection} from "../relay";
+import type {TArticle, TSeries} from "../service";
+import {getArticles, getFeed, getFeeds, getTags, getTopics} from "../service";
 import {tryCatch} from "ramda";
-import type {TArticle, TSeries} from "./service";
-
-const ARTICLE_ADDED = "ARTICLE_ADDED";
-const FEED_ADDED = "FEED_ADDED";
-const pubsub = new PubSub();
-type TArticleEdge = {
-    node: TArticle
-}
-type TArticleConnection = {
-    edges: [TArticleEdge]
-}
+import type {TArticleConnection} from "./common";
+import {mutations} from "./mutations";
+import {subscriptions} from "./subscriptions";
 
 const resolvers = {
     Node: {
@@ -105,9 +96,8 @@ const resolvers = {
             if (type) {
                 switch (type) {
                     case "Feed":
-                        const feed = await getFeed(id);
+                        const feed: any = await getFeed(id);
                         if (feed) {
-                            feed.id = feed._id;
                             feed.__type = "Feed";
                             return feed;
                         }
@@ -119,9 +109,8 @@ const resolvers = {
                 }
             }
             if (!(type && type !== "Feed")) {
-                const feed = await getFeed(id);
+                const feed: any = await getFeed(id);
                 if (feed) {
-                    feed.id = feed._id;
                     feed.__type = "Feed";
                     return feed;
                 }
@@ -132,43 +121,7 @@ const resolvers = {
                 return null
         },
     },
-    Mutation: {
-        addArticle: async (root, args, context) => {
-            let article = await addArticle(args);
-            pubsub.publish(ARTICLE_ADDED, {articleAdded: article});
-            return article;
-        },
-        addFeed: async (root, args, context) => {
-            let feed = await addFeed(args);
-            pubsub.publish(FEED_ADDED, {feedAdded: feed});
-            if (feed) {
-                // noinspection JSIgnoredPromiseFromCall
-                addFeedToStore(feed)
-            }
-            return feed;
-        },
-        markReaded: async (root, args, context) => {
-            const article = await readArticle(args);
-            // noinspection JSIgnoredPromiseFromCall
-            try_add_article_to_dataset(article, "1");
-            return article;
-        },
-        markSpam: async (root, args, context) => {
-            const article = await markArticleSpam(args);
-            // noinspection JSIgnoredPromiseFromCall
-            try_add_article_to_dataset(article, "-1");
-            return article;
-        },
-    },
-    Subscription: {
-        articleAdded: {
-            // Additional event labels can be passed to asyncIterator creation
-            subscribe: () => pubsub.asyncIterator([ARTICLE_ADDED]),
-        },
-        feedAdded: {
-            // Additional event labels can be passed to asyncIterator creation
-            subscribe: () => pubsub.asyncIterator([FEED_ADDED]),
-        }
-    },
+    Mutation: mutations,
+    Subscription: subscriptions,
 };
 export default resolvers;

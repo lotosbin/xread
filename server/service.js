@@ -168,14 +168,15 @@ export type TSeries = {
 function generateSeriesId(title: string) {
     return title.replace(/[一二三四五六七八九十零百千万0-9]/, '')
 }
-export async function addArticle({link, title, summary, time, feedId}: TAddArticleArgs) {
+
+export async function addArticle({link, title, summary, time, feedId}: TAddArticleArgs): Promise<TArticle | null> {
     let database;
 
 
     try {
         database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
         const filter = {title, link};
-        let update = {
+        let update: { $set: any } = {
             $set: {
                 link,
                 title,
@@ -191,6 +192,7 @@ export async function addArticle({link, title, summary, time, feedId}: TAddArtic
         const result = await database.db("xread").collection("article").findOne(filter);
         if (result) {
             result.id = result._id.toString();
+            result.extra = {updatedExisting: response.updatedExisting};
         }
         return result;
     } catch (e) {
