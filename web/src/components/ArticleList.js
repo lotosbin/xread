@@ -14,7 +14,6 @@ type TArticleListProps = {
     data: {};
     refetch: ()=>{};
     loadMore: ()=>{};
-    onClickItem: ()=>{};
 }
 const ArticleList = ({data = {}, loadMore, refetch, onClickItem}: TArticleListProps) => {
     const articles = (data.edges || []).map(it => it.node);
@@ -39,11 +38,8 @@ const ArticleList = ({data = {}, loadMore, refetch, onClickItem}: TArticleListPr
                 <ButtonAllMarkRead ids={articles.map(it => it.id)}/>
             </div>
             <div>
-                {articles.length
-                    ? (hasNextPage
-                        ? <Button className={styles.more} variant="outlined" onClick={loadMore}> {t('More')} </Button>
-                        : <Typography>{t('No More Content')}</Typography>)
-                    : <Typography>{t('Empty')}</Typography>}
+                {!articles.length ? <Typography>{t('Empty')}</Typography> : null}
+                {hasNextPage ? <Button className={styles.more} variant="outlined" onClick={loadMore}> {t('More')} </Button> : <Typography>{t('No More Content')}</Typography>}
             </div>
             <div></div>
         </div>
