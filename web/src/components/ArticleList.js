@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, {useContext, useEffect} from "react";
 import InfiniteScroll from 'react-infinite-scroller';
 import ArticleListItem from "./ArticleListItem";
 import styles from "./ArticleList.module.css"
@@ -12,12 +12,24 @@ import ButtonAllMarkRead from "./ButtonAllMarkRead";
 
 type TArticleListProps = {
     data: {};
-    refetch: ()=>{};
-    loadMore: ()=>{};
+    refetch: ?(()=>{});
+    loadMore: ?(()=>{});
 }
 const ArticleList = ({data = {}, loadMore, refetch, onClickItem}: TArticleListProps) => {
     const articles = (data.edges || []).map(it => it.node);
     const {hasNextPage = false, hasPreviousPage = true} = data.pageInfo || {};
+    const {edges = [], pageInfo = {}} = articles;
+    useEffect(() => {
+        const run = async () => {
+            console.log(`useEffect run:${(edges || []).length},${pageInfo.hasNextPage}`);
+            console.dir(data);
+            if (edges.length === 0 && pageInfo.hasNextPage) {
+                console.log(`useEffect run refetch`);
+                refetch && refetch();
+            }
+        };
+        run()
+    }, [articles]);
     const {t, ready} = useTranslation("", {useSuspense: false});
     const {mode: viewMode} = useContext(ViewModeContext);
     return <div className={styles.container}>
@@ -38,7 +50,7 @@ const ArticleList = ({data = {}, loadMore, refetch, onClickItem}: TArticleListPr
                 <ButtonAllMarkRead ids={articles.map(it => it.id)}/>
             </div>
             <div>
-                {!articles.length ? <Typography>{t('Empty')}</Typography> : null}
+                {(!articles.length && !hasNextPage) ? <Typography>{t('Empty')}</Typography> : null}
                 {hasNextPage ? <Button className={styles.more} variant="outlined" onClick={loadMore}> {t('More')} </Button> : <Typography>{t('No More Content')}</Typography>}
             </div>
             <div></div>
