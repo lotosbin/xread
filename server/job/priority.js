@@ -1,4 +1,5 @@
-import {nextParsePriorityArticle, parseArticlePriority, setArticlePriority} from "../service";
+import {nextParsePriorityArticle, parsePriority, setArticlePriority} from "../service";
+import * as R from "ramda";
 
 let running = false;
 
@@ -12,9 +13,13 @@ export async function runParseArticlePriority() {
     try {
         let article = await nextParsePriorityArticle();
         while (article) {
-            const priority = await parseArticlePriority(article);
-            await setArticlePriority(article.id, priority);
-            article = await nextParsePriorityArticle();
+            try {
+                const priorities = await parsePriority(`${article.title}${article.summary || ""}${(article.feed || {}).title}`);
+                await setArticlePriority(article.id, priorities);
+                article = await nextParsePriorityArticle();
+            } catch (e) {
+                console.error(e.message, e);
+            }
             await sleep(200);//防止 QPS 超限制
         }
     } catch (e) {

@@ -3,6 +3,7 @@ import fetch from "node-fetch";
 
 import utf8 from "utf8";
 import moment from "moment";
+
 const api_key = process.env.BAIDU_AIP_EASEDL_API_KEY;
 const secret_key = process.env.BAIDU_AIP_EASEDL_SECRET_KEY;
 const url = `https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=${api_key}&client_secret=${secret_key}`;
@@ -162,10 +163,27 @@ export async function dataset_list(): Promise<TDataSetListResult> {
     console.debug(`dataset_list:result=${JSON.stringify(json)}`);
     return json;
 }
+
+export type TPriorityResult = {
+    name: string;
+    score: number;
+}
+type TResult<T> = {
+    error_code: number,
+    error_msg: string,
+    log_id: number,
+    result: T,
+}
+export type TResults<T> = {
+    error_code: number,
+    error_msg: string,
+    log_id: number,
+    results: T,
+}
 /**
  * @return
  */
-export async function recommend_priority(text: string) {
+export async function recommend_priority(text: string): Promise<TResults<Array<TPriorityResult>>> {
     const accessToken = await getAccessToken();
     const url = `https://aip.baidubce.com/rpc/2.0/ai_custom/v1/text_cls/recommend_priority?access_token=${accessToken}`;
     const response = await fetch(url, {
@@ -178,28 +196,9 @@ export async function recommend_priority(text: string) {
     if (!response.ok) {
         throw new Error(`${response.statusCode}:${await response.text()}`)
     }
-    const json = await response.json();
-    console.debug(`recommend_priority:result=${JSON.stringify(json)}`);
-    if (json.error_code === 17) {
-        //Open api daily request limit reached"
-        console.warn(`recommend_priority:Open api daily request limit reached`);
-        try {
-            return await recommend_priority_debug(text)
-        } catch (e) {
-            console.error(e)
-        }
-    }
-    /*{
-    log_id: 8538749507596601000,
-    results: [
-     { name: '0', score: 0.7447099685668945 },
-     { name: '1', score: 0.2552900016307831 }
-    ]
-    }*/
-    return json;
+    return await response.json();
 }
-
-export async function recommend_priority_debug(text: string) {
+export async function recommend_priority_debug(text: string): Promise<TResult<Array<TPriorityResult>>> {
     const result = await fetch("http://ai.baidu.com/easydl/api", {
         credentials: "include",
         headers: {
@@ -213,7 +212,7 @@ export async function recommend_priority_debug(text: string) {
         "referrerPolicy": "no-referrer-when-downgrade",
         body: JSON.stringify({
             "modelId": 28810,
-            "iterationId": 40212,
+            "iterationId": 40911,
             "type": 4,
             "entity": `${text}`,
             "method": "model/verify"

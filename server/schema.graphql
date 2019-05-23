@@ -18,6 +18,7 @@ type Viewer{
 }
 input ArticleInput {
     keyword: String,
+    score:Float,
 }
 type Tag implements Node{
     id:ID!

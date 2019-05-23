@@ -5,7 +5,8 @@ import type {TKeywordResult, TTopicResult} from "./baidu-aip-nlp";
 import {keyword, topic} from "./baidu-aip-nlp";
 
 import * as R from "ramda";
-import {dataset_add_entity, recommend_priority} from "./baidu-aip-easedl";
+import {dataset_add_entity, recommend_priority, recommend_priority_debug} from "./baidu-aip-easedl";
+import type {TPriorityResult} from "./baidu-aip-easedl";
 
 export let mongoConnectionString = process.env.MONGO;
 type TFeed = {
@@ -65,8 +66,10 @@ type TGetArticlesArgs = {
     box: string;
     read: string;
     priority: number | null;
+
     search: {
         keyword: string | null;
+        score: number;
     };
     seriesId: string | null;
 }
@@ -74,8 +77,9 @@ type TGetArticlesArgs = {
 export async function getArticles(args: TGetArticlesArgs) {
     console.log(`getArticles:args=${JSON.stringify(args)}`);
     let {
-        first, after, last, before, feedId, tag, topic, box, read = "all", priority = null,
-        search: {keyword} = {},
+        first, after, last, before, feedId, tag, topic, box, read = "all",
+        priority = null,
+        search: {keyword, score = 0.5,} = {},
         seriesId
     } = args;
     assert(!!first || !!last, "first or last should grate then 0");
@@ -108,7 +112,11 @@ export async function getArticles(args: TGetArticlesArgs) {
         query.topic = topic;
     }
     if (priority != null) {
-        query.priority = priority;
+        if (priority === 1) {
+            query.priorities = {name: `${priority}`, score: {$gt: score}}
+        } else if (priority === -1) {
+            query.priorities = {name: `${priority}`, score: {$gt: score}}
+        }
     }
     if (seriesId) {
         query.seriesId = seriesId;
@@ -299,11 +307,11 @@ async function addArticleKeywords(id: string, tags: Array<string>) {
     }
 }
 
-export async function setArticlePriority(id: string, priority: number) {
+export async function setArticlePriority(id: string, priorities: [TPriorityResult]) {
     let database;
     try {
         database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
-        let update = {$set: {priority: priority}};
+        let update = {$set: {priorities: priorities}};
         const response = await database.db("xread").collection("article").updateOne({_id: new ObjectId(id)}, update);
     } finally {
         if (database) {
@@ -311,7 +319,6 @@ export async function setArticlePriority(id: string, priority: number) {
         }
     }
 }
-
 async function addArticleTopic(id: string, tag: string) {
     console.log(`addArticleTopic:id=${id},topic=${tag}`);
     let database;
@@ -415,7 +422,7 @@ export async function nextParsePriorityArticle(): Promise<TArticle> {
     let database;
     try {
         database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
-        const articles = await database.db("xread").collection("article").find({spam: {$ne: true}, priority: {$exists: false}}).sort({_id: -1}).limit(1).toArray();
+        const articles = await database.db("xread").collection("article").find({spam: {$ne: true}, priorities: {$exists: false}}).sort({_id: -1}).limit(1).toArray();
         const result = R.head(articles);
         if (result) {
             result.id = result._id.toString();
@@ -429,23 +436,27 @@ export async function nextParsePriorityArticle(): Promise<TArticle> {
     }
 }
 
-export async function parseArticlePriority(article: TArticle): Promise<number> {
-    return await parsePriority(`${article.title}${article.summary || ""}${(article.feed || {}).title}`);
-}
-
 /**
  * @see http://ai.baidu.com/docs#/EasyDL_TEXT_API/top
  * */
-export async function parsePriority(text: string): Promise<number> {
+export async function parsePriority(text: string): Promise<[TPriorityResult]> {
     if (text.length > 4096) {
         console.warn(`parsePriority: text is large then 4096`)
     }
     const json = await recommend_priority(text.slice(0, 4096));
-    const isGood = n => n.score > 0.8;
-    const item = R.reduce(R.maxBy(R.prop('score')), {name: 0, score: 0}, R.filter(isGood, json.result || json.results || []));
-    const priority = parseInt(item.name);
-    console.debug(`parsePriority:text=${text},priority=${priority}`);
-    return priority;
+    console.debug(`recommend_priority:result=${JSON.stringify(json)}`);
+    if (!json.error_code) {
+        return json.results;
+    }
+    if (json.error_code === 17 && process.env.NODE_ENV !== "production") {
+        //Open api daily request limit reached"
+        console.warn(`recommend_priority:Open api daily request limit reached`);
+        const json_debug = await recommend_priority_debug(text);
+        return json_debug.result;
+    } else {
+        throw new Error('parsePriority failed' + json.error_msg)
+    }
+
 }
 
 export async function nextParseTopicArticle(): Promise<TArticle> {
