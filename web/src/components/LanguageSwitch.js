@@ -1,19 +1,14 @@
-import React, {useState} from 'react';
+import React from 'react';
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import {useTranslation} from "react-i18next";
 
-const LanguageSwitch = () => {
-    const {t, ready, i18n} = useTranslation("", {useSuspense: false});
-    const [lang, setLang] = useState(i18n.language);
+const LanguageSwitch = (props) => {
+    const {lang, setLang} = props;
     return <FormControl>
         <Select
             value={lang}
-            onChange={event => {
-                setLang(event.target.value);
-                i18n.changeLanguage(event.target.value);
-            }}
+            onChange={event => setLang(event.target.value)}
             inputProps={{
                 name: 'lang',
                 id: 'lang-simple',

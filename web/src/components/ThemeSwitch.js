@@ -1,14 +1,13 @@
 // @flow
-import React, {useContext} from 'react';
+import React from 'react';
 import Switch from '@material-ui/core/Switch';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import ThemeContext from "../contexts/ThemeContext";
 import {useTranslation} from "react-i18next";
 
-const ThemeSwitch = () => {
+const ThemeSwitch = (props) => {
+    const {theme, setTheme} = props;
     const {t, ready, i18n} = useTranslation("", {useSuspense: false});
-    const {theme, setTheme} = useContext(ThemeContext);
     return <FormGroup row>
         <FormControlLabel
             control={

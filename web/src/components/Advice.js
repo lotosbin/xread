@@ -1,12 +1,12 @@
 import styles from "./Advice.module.css";
 import React, {useContext, useState} from "react";
-import ThemeContext from "../contexts/ThemeContext";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
+import {useSelector} from "react-redux";
 
 export function Advice() {
-    const {theme} = useContext(ThemeContext);
-    const [hide, setHide] = useState(false)
+    const {theme} = useSelector(state => state.theme);
+    const [hide, setHide] = useState(false);
     return (<Paper elevation={1} className={styles.advice}>
         <Typography variant="h5" component="h2" onClick={() => setHide(!hide)}>
             帮助我们改进

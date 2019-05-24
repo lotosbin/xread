@@ -8,9 +8,9 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import {Link} from "react-router-dom";
 import styles from "./AppBar.module.css";
-import ThemeSwitch from "./ThemeSwitch";
+import ThemeSwitch from "../containers/ThemeSwitch";
 import {useTranslation} from "react-i18next";
-import LanguageSwitch from "./LanguageSwitch";
+import LanguageSwitch from "../containers/LanguageSwitch";
 
 const ButtonAppBar = () => {
     const {t, ready} = useTranslation("", {useSuspense: false});
