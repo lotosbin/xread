@@ -103,7 +103,9 @@ type Mutation {
     addArticle(title: String, summary: String,link:String,time:String,feedId:String):Article
     addFeed(link:String!,title:String):Feed
     markReaded(id:String):Article
+    markReadedBatch(ids:[String]):[Article]
     markSpam(id:String):Article
+    markSpamBatch(ids:[String]):[Article]
 }
 type Subscription {
     articleAdded: Article

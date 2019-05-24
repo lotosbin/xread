@@ -79,7 +79,7 @@ export async function getArticles(args: TGetArticlesArgs) {
     let {
         first, after, last, before, feedId, tag, topic, box, read = "all",
         priority = null,
-        search: {keyword, score = 0.5,} = {},
+        search: {keyword, score,} = {},
         seriesId
     } = args;
     assert(!!first || !!last, "first or last should grate then 0");
@@ -113,9 +113,9 @@ export async function getArticles(args: TGetArticlesArgs) {
     }
     if (priority != null) {
         if (priority === 1) {
-            query.priorities = {name: `${priority}`, score: {$gt: score}}
+            query.priorities = {name: `${priority}`, score: {$gt: score ? score : 0.2}}
         } else if (priority === -1) {
-            query.priorities = {name: `${priority}`, score: {$gt: score}}
+            query.priorities = {name: `${priority}`, score: {$gt: score ? score : 0.8}}
         }
     }
     if (seriesId) {

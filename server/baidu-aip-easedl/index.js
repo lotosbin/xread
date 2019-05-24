@@ -212,7 +212,7 @@ export async function recommend_priority_debug(text: string): Promise<TResult<Ar
         "referrerPolicy": "no-referrer-when-downgrade",
         body: JSON.stringify({
             "modelId": 28810,
-            "iterationId": 40911,
+            "iterationId": 41383,
             "type": 4,
             "entity": `${text}`,
             "method": "model/verify"

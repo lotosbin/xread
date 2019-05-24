@@ -26,10 +26,26 @@ export const mutations = {
         try_add_article_to_dataset(article, "1");
         return article;
     },
+    markReadedBatch: async (root, {ids = []}, context) => {
+        return Promise.all(ids.map(async id => {
+            const article = await readArticle({id});
+            // noinspection JSIgnoredPromiseFromCall
+            try_add_article_to_dataset(article, "1");
+            return article;
+        }))
+    },
     markSpam: async (root, args, context) => {
         const article = await markArticleSpam(args);
         // noinspection JSIgnoredPromiseFromCall
         try_add_article_to_dataset(article, "-1");
         return article;
+    },
+    markSpamBatch: async (root, {ids = []}, context) => {
+        return Promise.all(ids.map(async id => {
+            const article = await markArticleSpam({id});
+            // noinspection JSIgnoredPromiseFromCall
+            try_add_article_to_dataset(article, "-1");
+            return article;
+        }))
     },
 };
