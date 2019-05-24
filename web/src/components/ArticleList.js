@@ -18,18 +18,19 @@ type TArticleListProps = {
 const ArticleList = ({data = {}, loadMore, refetch, onClickItem}: TArticleListProps) => {
     const articles = (data.edges || []).map(it => it.node);
     const {hasNextPage = false, hasPreviousPage = true} = data.pageInfo || {};
-    const {edges = [], pageInfo = {}} = articles;
-    useEffect(() => {
-        const run = async () => {
-            console.log(`useEffect run:${(edges || []).length},${pageInfo.hasNextPage}`);
-            console.dir(data);
-            if (edges.length === 0 && pageInfo.hasNextPage) {
-                console.log(`useEffect run refetch`);
-                refetch && refetch();
-            }
-        };
-        run()
-    }, [articles]);
+    // const {edges = [], pageInfo = {}} = articles;
+    // useEffect(() => {
+    //     const run = async () => {
+    //         console.log(`useEffect run:${(edges || []).length},${pageInfo.hasNextPage}`);
+    //         console.dir(data);
+    //         if (edges.length === 0 && pageInfo.hasNextPage) {
+    //             console.log(`useEffect run refetch`);
+    //             refetch && refetch();
+    //         }
+    //     };
+    //     // noinspection JSIgnoredPromiseFromCall
+    //     run()
+    // }, [articles]);
     const {t, ready} = useTranslation("", {useSuspense: false});
     const {mode: viewMode} = useContext(ViewModeContext);
     return <div className={styles.container}>

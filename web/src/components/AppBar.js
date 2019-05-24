@@ -24,6 +24,7 @@ const ButtonAppBar = () => {
                     <Typography variant="h6" color="inherit">{t('xRead')}</Typography>
                     <Toolbar className={styles.nav}>
                         <Button className={styles.nav_item} color="inherit" component={Link} to="/article">{t('Home')}</Button>
+                        <Button className={styles.nav_item} color="inherit" component={Link} to="/guess/box/inbox">{t('Guess')}</Button>
                         <Button className={styles.nav_item} color="inherit" component={Link} to="/topic">{t('Topic')}</Button>
                         <Button className={styles.nav_item} color="inherit" component={Link} to="/tag">{t('Tag')}</Button>
                         <Button className={styles.nav_item} color="inherit" component={Link} to="/feed">{t('Feed')}</Button>

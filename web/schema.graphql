@@ -1,0 +1,129 @@
+# This file was generated based on ".graphqlconfig". Do not edit manually.
+
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
+
+interface Node {
+  id: ID!
+}
+
+type Article implements Node {
+  box: String
+  feed: Feed
+  id: ID!
+  link: String
+  priority: Int!
+  series: Series
+  summary: String
+  tags: [String]
+  time: String
+  title: String
+  topic: String
+}
+
+type ArticleConnection {
+  edges: [ArticleEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ArticleEdge {
+  cursor: String!
+  node: Article!
+}
+
+type Feed implements Node {
+  articles(after: String, before: String, box: String, first: Int, last: Int, priority: Int = 0, read: String = "all", search: ArticleInput): ArticleConnection
+  id: ID!
+  link: String!
+  title: String
+}
+
+type FeedConnection {
+  edges: [FeedEdge!]!
+  pageInfo: PageInfo!
+}
+
+type FeedEdge {
+  cursor: String!
+  node: Feed!
+}
+
+type Mutation {
+  addArticle(feedId: String, link: String, summary: String, time: String, title: String): Article
+  addFeed(link: String!, title: String): Feed
+  markReaded(id: String): Article
+  markReadedBatch(ids: [String]): [Article]
+  markSpam(id: String): Article
+  markSpamBatch(ids: [String]): [Article]
+}
+
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+type Query {
+  articles(after: String, before: String, box: String, first: Int, last: Int, priority: Int = 0, read: String = "all", search: ArticleInput): ArticleConnection
+  feeds(after: String, before: String, first: Int, last: Int): FeedConnection
+  node(id: ID!, type: String): Node
+  tags: TagConnection
+  topics: TopicConnection
+  viewer: Viewer
+}
+
+type Series implements Node {
+  articles(after: String, before: String, box: String, first: Int, last: Int, priority: Int = 0, read: String = "all", search: ArticleInput): ArticleConnection
+  id: ID!
+  title: String
+}
+
+type Subscription {
+  articleAdded: Article
+  feedAdded: Feed
+}
+
+type Tag implements Node {
+  articles(after: String, before: String, box: String, first: Int, last: Int, priority: Int = 0, read: String = "all", search: ArticleInput): ArticleConnection
+  id: ID!
+  name: String!
+}
+
+type TagConnection {
+  edges: [TagEdge!]!
+  pageInfo: PageInfo!
+}
+
+type TagEdge {
+  cursor: String!
+  node: Tag!
+}
+
+type Topic implements Node {
+  articles(after: String, before: String, box: String, first: Int, last: Int, priority: Int = 0, read: String = "all", search: ArticleInput): ArticleConnection
+  id: ID!
+  name: String!
+}
+
+type TopicConnection {
+  edges: [TopicEdge!]!
+  pageInfo: PageInfo!
+}
+
+type TopicEdge {
+  cursor: String!
+  node: Topic!
+}
+
+type Viewer {
+  username: String
+}
+
+input ArticleInput {
+  keyword: String
+  score: Float
+}

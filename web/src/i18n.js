@@ -28,6 +28,7 @@ i18n
                     "xRead": "来阅读",
                     "Dark Mode": "暗色模式",
                     "Home": "首页",
+                    "Guess": "推荐",
                     "Topic": "分类",
                     "Tag": "标签",
                     "Feed": "频道",

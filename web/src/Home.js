@@ -12,6 +12,7 @@ import queryString from "query-string";
 import ReadFilters from "./components/ReadFilters";
 import ViewModeSwitch from "./components/ViewModeSwitch";
 import {ViewModeContext} from "./contexts";
+import GuessArticleListContainer from "./components/GuessArticleListContainer";
 
 const Home = ({location: {pathname, search}}) => {
     let {read = "all"} = queryString.parse(search);
@@ -39,12 +40,12 @@ const Home = ({location: {pathname, search}}) => {
             </div>
             <div className={styles.article_list}>
                 <Route exact path="/article" component={ArticleListContainer}/>
+
                 <Route path="/article/box/:box" component={ArticleListContainer}/>
                 <Route path="/article/box/:box/read/:read" component={ArticleListContainer}/>
                 <Route path="/article/tag/:tag" component={TagArticleListContainer}/>
                 <Route path="/article/topic/:tag" component={TopicArticleListContainer}/>
             </div>
-
         </div>
     </div>
 };
