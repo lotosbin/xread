@@ -53,8 +53,8 @@ const resolvers = {
         summary: ({summary}: TArticle) => {
             return (summary || "").replace(/<[^>]+>/g, "")
         },
-        feed: ({feedId}: TArticle, args, {}) => {
-            return getFeed(feedId)
+        feed: async ({feedId}: TArticle, args, {}) => {
+            return await getFeed(feedId)
         },
         tags: async (article: TArticle,) => {
             if (article.tags) {
