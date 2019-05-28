@@ -113,9 +113,9 @@ export async function getArticles(args: TGetArticlesArgs) {
     }
     if (priority != null) {
         if (priority === 1) {
-            query.priorities = {name: `${priority}`, score: {$gt: score ? score : 0.2}}
+            query.priorities = {$elemMatch: {name: `${priority}`, score: {$gt: score ? score : 0.2}}}
         } else if (priority === -1) {
-            query.priorities = {name: `${priority}`, score: {$gt: score ? score : 0.8}}
+            query.priorities = {$elemMatch: {name: `${priority}`, score: {$gt: score ? score : 0.8}}}
         }
     }
     if (seriesId) {
@@ -319,6 +319,7 @@ export async function setArticlePriority(id: string, priorities: [TPriorityResul
         }
     }
 }
+
 async function addArticleTopic(id: string, tag: string) {
     console.log(`addArticleTopic:id=${id},topic=${tag}`);
     let database;
@@ -476,6 +477,7 @@ export async function nextParseTopicArticle(): Promise<TArticle> {
         }
     }
 }
+
 export async function parseArticleTopic(article: TArticle): Promise<string | null> {
     try {
         const content = article.summary || article.title || "内容为空";//内容为空 防止接口报错，无法继续处理
