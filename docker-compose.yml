@@ -7,6 +7,12 @@ services:
       - "27017:27017"
 #    volumes:
 #      - ./mongo/data/db:/data/db
+  rss:
+    build: ./rss
+#    ports:
+#      - "4001:4001"
+    environment:
+      REACT_APP_API_URL: http://192.168.43.211:4000/graphql
   server:
     build: ./server
     ports:
