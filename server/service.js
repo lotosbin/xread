@@ -7,6 +7,7 @@ import {keyword, topic} from "./baidu-aip-nlp";
 import * as R from "ramda";
 import {dataset_add_entity, recommend_priority, recommend_priority_debug} from "./baidu-aip-easedl";
 import type {TPriorityResult} from "./baidu-aip-easedl";
+import moment from "moment";
 
 export let mongoConnectionString = process.env.MONGO;
 type TFeed = {
@@ -437,10 +438,15 @@ export async function nextParsePriorityArticle(): Promise<TArticle> {
     }
 }
 
+var limit = null;
 /**
  * @see http://ai.baidu.com/docs#/EasyDL_TEXT_API/top
  * */
 export async function parsePriority(text: string): Promise<[TPriorityResult]> {
+    const key = moment(Date.now()).format('YYYYMMDD');
+    if (limit === key) {
+        throw new Error('parsePriority failed Open api daily request limit reached')
+    }
     if (text.length > 4096) {
         console.warn(`parsePriority: text is large then 4096`)
     }
@@ -449,15 +455,19 @@ export async function parsePriority(text: string): Promise<[TPriorityResult]> {
     if (!json.error_code) {
         return json.results;
     }
-    if (json.error_code === 17 && process.env.NODE_ENV !== "production") {
-        //Open api daily request limit reached"
-        console.warn(`recommend_priority:Open api daily request limit reached`);
-        const json_debug = await recommend_priority_debug(text);
-        return json_debug.result;
+    if (json.error_code === 17) {
+        if (process.env.NODE_ENV === "production") {
+            limit = key;
+            throw new Error('parsePriority failed' + json.error_msg)
+        } else {
+            //Open api daily request limit reached"
+            console.warn(`recommend_priority:Open api daily request limit reached`);
+            const json_debug = await recommend_priority_debug(text);
+            return json_debug.result;
+        }
     } else {
         throw new Error('parsePriority failed' + json.error_msg)
     }
-
 }
 
 export async function nextParseTopicArticle(): Promise<TArticle> {
