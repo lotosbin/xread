@@ -83,7 +83,7 @@ const ArticlePriorityList = ({location: {search}, match: {params: {tag, box = "i
     let {read = "unread"} = queryString.parse(search);
     const {t, ready} = useTranslation("", {useSuspense: false});
     const [score, setScore] = useState(0.8);
-    const variables = {tag: tag, cursor: null, read: read, priority: parseInt(priority), box: box, score};
+    const variables = {tag: tag, cursor: null, read: read, priority: parseInt(priority), box: box};
     const {data, fetchMore, refetch, loading, error} = useQuery(query, {variables});
     // const {articles = {}} = data;
     // const {edges = [], pageInfo = {}} = articles;
