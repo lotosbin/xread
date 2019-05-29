@@ -56,7 +56,7 @@ let mutationMarkRead = gql`mutation markRead($id:String) {
 }`;
 const ArticleSingleLineListItem = ({data, onClickItem, match: {params: {box: route_box = "all"}}, location: {search},}) => {
     const {id, title, summary, link, time, tags = [], feed, box, priority, series = {}} = data;
-    const {id: seriesId, title: seriesTitle} = series;
+    const {id: seriesId, title: seriesTitle} = series || {};
     const {t} = useTranslation("", {useSuspense: false});
     let {read = "all"} = queryString.parse(search);
     const markRead = useMutation(mutationMarkRead);
