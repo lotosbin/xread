@@ -7,31 +7,35 @@ services:
       - "27017:27017"
 #    volumes:
 #      - ./mongo/data/db:/data/db
+  rss:
+    build: ./rss
+#    ports:
+#      - "4001:4001"
+    environment:
+      REACT_APP_API_URL: http://192.168.43.211:4000/graphql
   server:
     build: ./server
-#    ports:
-#      - "4000:4000"
+    ports:
+      - "4000:4000"
     environment:
       - MONGO=mongodb://mongo:27017
     links:
       - mongo:mongo
-  spider:
-    build: ./spider
-    environment:
-      - API_URL=http://server:4000/graphql
-    links:
-      - server:server
   web:
-    build: ./web
+    build:
+      context: ./web
+      args:
+        REACT_APP_API_URL: http://192.168.43.211:4000/graphql
+        REACT_APP_WEBSOCKET_URL: ws://192.168.43.211:4000/graphql
     environment:
       - REACT_APP_API_URL=http://192.168.43.211:5000/graphql
       - REACT_APP_WEBSOCKET_URL=ws://192.168.43.211:5000/graphql
-#    ports:
-#      - "3000:3000"
-  nginx:
-    build: ./nginx
-    links:
-      - server:server
-      - web:web
     ports:
-      - "5000:80"
+      - "3000:3000"
+#  nginx:
+#    build: ./nginx
+#    links:
+#      - server:server
+#      - web:web
+#    ports:
+#      - "5000:80"

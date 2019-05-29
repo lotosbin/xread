@@ -1,0 +1,46 @@
+.container {
+  padding: 8px 8px 20px;
+  overflow: hidden;
+  margin: 8px 4px;
+}
+
+.title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
+
+}
+
+.title_single_line :extend(.title) {
+  white-space: nowrap;
+}
+
+.summary {
+  text-align: start;
+}
+
+.summary_single_line :extend(.summary) {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.tags {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.tag {
+  padding: 8px;
+  word-break: keep-all;
+}
+
+.foot {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

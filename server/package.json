@@ -4,11 +4,18 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "apollo-fetch": "^0.7.0",
+    "apollo-link-http": "^1.5.14",
     "apollo-server": "^2.4.6",
     "baidu-aip-sdk": "^2.3.9",
     "graphql": "^14.1.1",
+    "graphql-tools": "^4.0.4",
     "lodash": "^4.17.11",
-    "mongodb": "^3.1.13"
+    "moment": "^2.24.0",
+    "mongodb": "^3.1.13",
+    "node-fetch": "^2.3.0",
+    "ramda": "^0.26.1",
+    "utf8": "^3.0.0"
   },
   "scripts": {
     "start": "babel-node index.js",
@@ -19,6 +26,8 @@
     "@babel/core": "^7.3.3",
     "@babel/node": "^7.2.2",
     "@babel/preset-env": "^7.3.1",
-    "@babel/preset-flow": "^7.0.0"
+    "@babel/preset-flow": "^7.0.0",
+    "flow-bin": "^0.97.0",
+    "flow-typed": "^2.5.1"
   }
 }

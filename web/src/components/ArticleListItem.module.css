@@ -1,32 +1,41 @@
 .container {
-    padding: 8px 8px 20px;
-    overflow: hidden;
+  padding: 8px 8px 20px;
+  overflow: hidden;
+  margin: 8px 4px;
 }
-
-.title {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+.title,
+.title_single_line {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: baseline;
 }
-
-.summary {
-    text-align: start;
+.title_single_line {
+  white-space: nowrap;
 }
-
+.summary,
+.summary_single_line {
+  text-align: start;
+}
+.summary_single_line {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  flex: 1;
+}
 .tags {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
 }
-
 .tag {
-    padding: 8px;
-    word-break: keep-all;
+  padding: 8px;
+  word-break: keep-all;
 }
-
 .foot {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
+/*# sourceMappingURL=ArticleListItem.module.css.map */

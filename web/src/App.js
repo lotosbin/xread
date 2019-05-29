@@ -1,40 +1,38 @@
-import React, {Component} from 'react';
+import React from 'react';
 import './App.css';
 import {ApolloProvider} from "react-apollo";
 import client from './apollo/client';
-import {HashRouter as Router, Route, Link, Redirect} from "react-router-dom";
-import Home from "./Home";
-import Feed from "./Feed";
-import styles from "./App.module.css";
-import Tag from "./Tag";
-import Store from "./Store";
-import Topic from "./Topic";
+import {HashRouter as Router, Route} from "react-router-dom";
+import {ApolloProvider as ApolloHooksProvider} from 'react-apollo-hooks';
+import AppBar from './components/AppBar'
+import {Advice} from "./components/Advice";
+import loadable from '@loadable/component'
+import GuessArticleListContainer from "./components/GuessArticleListContainer";
 
-class App extends Component {
-    render() {
-        return (
-            <ApolloProvider client={client}>
-                <Router>
-                    <div className="App">
-                        <div className={styles.nav}>
-                            <div className={styles.nav_item}><Link to="/article">Home</Link></div>
-                            <div className={styles.nav_item}><Link to="/feed">Feed</Link></div>
-                            <div className={styles.nav_item}><Link to="/topic">Topic</Link></div>
-                            <div className={styles.nav_item}><Link to="/tag">Tag</Link></div>
-                            <div className={styles.nav_item}><Link to="/store">Store</Link></div>
-                        </div>
-                        <Route exact path="/" component={Home}/>
-                        <Route path="/article" component={Home}/>
-                        <Route path="/feed" component={Feed}/>
-                        <Route path="/tag" component={Tag}/>
-                        <Route path="/topic" component={Topic}/>
-                        <Route path="/store" component={Store}/>
-                    </div>
-                </Router>
-            </ApolloProvider>
-        );
-    }
-}
+const Home = loadable(() => import('./Home'));
+const Feed = loadable(() => import('./Feed'));
+const Tag = loadable(() => import('./Tag'));
+const Topic = loadable(() => import('./Topic'));
+
+const App = () => (
+    <ApolloProvider client={client}>
+        <ApolloHooksProvider client={client}>
+            <Router>
+                <div className="App">
+                    <AppBar/>
+                    <Route exact path="/" component={Home}/>
+                    <Route path="/article" component={Home}/>
+                    <Route path="/article/all" component={Home}/>
+                    <Route path="/guess" component={GuessArticleListContainer}/>
+                    <Route path="/feed" component={Feed}/>
+                    <Route path="/tag" component={Tag}/>
+                    <Route path="/topic" component={Topic}/>
+                    <Advice/>
+                </div>
+            </Router>
+        </ApolloHooksProvider>
+    </ApolloProvider>
+);
 
 
 export default App;

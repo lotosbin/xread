@@ -1,4 +1,18 @@
 .container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    min-height: 200px;
+
+}
+
+.left {
+    width: 200px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.right {
+    flex: 1;
+    overflow-y: scroll;
+    min-height: 0;
 }

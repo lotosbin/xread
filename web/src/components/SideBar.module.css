@@ -1,0 +1,5 @@
+.root {
+    width: 100%;
+    max-width: 360px;
+    /*backgroundColor: theme.palette.background.paper,*/
+}

@@ -1,0 +1,10 @@
+overwrite: true
+schema: "http://www.xread.yuanjingtech.com/graphql"
+documents: "**/*.graphql"
+generates:
+  src/generated/graphql.json:
+    plugins:
+      - "fragment-matcher"
+#  ./graphql.schema.json:
+#    plugins:
+#      - "introspection"
