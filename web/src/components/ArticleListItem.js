@@ -46,13 +46,18 @@ export const fragment_article_list_item = gql`fragment fragment_article_list_ite
         title
         link
     }
+    series{
+        id
+        title
+    }
 }`;
 let mutationMarkRead = gql`mutation markRead($id:String) {
     markReaded(id:$id){
         id
     }
 }`;
-const ArticleListItem = ({data: {id, title, summary, link, time, tags = [], feed, box, priority}, onClickItem, match: {params: {box: route_box = "all"}}, location: {search},}) => {
+const ArticleListItem = ({data: {id, title, summary, link, time, tags = [], feed, box, priority, series = {}}, onClickItem, match: {params: {box: route_box = "all"}}, location: {search},}) => {
+    const {id: seriesId, title: seriesTitle} = series || {};
     const {mode: viewMode} = useContext(ViewModeContext);
     const {t} = useTranslation("", {useSuspense: false});
     let {read = "all"} = queryString.parse(search);
@@ -78,6 +83,7 @@ const ArticleListItem = ({data: {id, title, summary, link, time, tags = [], feed
                 <Typography>{t('priority')}:{t(priority)}</Typography>
                 <Typography className={styles.tags}>{t('tags')}:{tags.map(it => <span key={it} className={styles.tag}><Link to={`/article/tag/${it}`}>{it}</Link></span>)}</Typography>
                 <Typography>{t('feed')}: {feed_title || feed_link || ''}</Typography>
+                {seriesId ? <Typography component={Link} to={`/series/${seriesId}`}>{t('Series')}: {seriesTitle || seriesId || ''}</Typography> : null}
             </div>
         </Paper>
     </div>);

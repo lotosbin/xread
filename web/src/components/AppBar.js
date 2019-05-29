@@ -28,6 +28,7 @@ const ButtonAppBar = () => {
                         <Button className={styles.nav_item} color="inherit" component={Link} to="/topic">{t('Topic')}</Button>
                         <Button className={styles.nav_item} color="inherit" component={Link} to="/tag">{t('Tag')}</Button>
                         <Button className={styles.nav_item} color="inherit" component={Link} to="/feed">{t('Feed')}</Button>
+                        <Button className={styles.nav_item} color="inherit" component={Link} to="/series">{t('Series')}</Button>
                         <Button className={styles.nav_item} color="inherit" component={"a"} href="http://store.xread.yuanjingtech.com" target="_blank">{t('Store')}</Button>
                         <Button className={styles.nav_item} color="inherit" component={"a"} href="http://feathub.com/lotosbin/xread" target="_blank">{t('Advice')}</Button>
                     </Toolbar>

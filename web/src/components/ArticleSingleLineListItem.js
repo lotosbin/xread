@@ -44,13 +44,19 @@ export const fragment_article_list_item = gql`fragment fragment_article_list_ite
         title
         link
     }
+    series{
+        id
+        title
+    }
 }`;
 let mutationMarkRead = gql`mutation markRead($id:String) {
     markReaded(id:$id){
         id
     }
 }`;
-const ArticleSingleLineListItem = ({data: {id, title, summary, link, time, tags = [], feed, box, priority}, onClickItem, match: {params: {box: route_box = "all"}}, location: {search},}) => {
+const ArticleSingleLineListItem = ({data, onClickItem, match: {params: {box: route_box = "all"}}, location: {search},}) => {
+    const {id, title, summary, link, time, tags = [], feed, box, priority, series = {}} = data;
+    const {id: seriesId, title: seriesTitle} = series;
     const {t} = useTranslation("", {useSuspense: false});
     let {read = "all"} = queryString.parse(search);
     const markRead = useMutation(mutationMarkRead);
@@ -66,6 +72,7 @@ const ArticleSingleLineListItem = ({data: {id, title, summary, link, time, tags 
                 <Typography component="p" onClick={() => onClickItem && onClickItem({id})} className={styles.summary_single_line}>{summary}</Typography>
                 <Typography title={time_moment.calendar()}>{time_moment.fromNow()}</Typography>
                 <Typography>{t('feed')}: {feed_title || feed_link || ''}</Typography>
+                {seriesId ? <Typography component={Link} to={`/series/${seriesId}`}>{t('Series')}: {seriesTitle || seriesId || ''}</Typography> : null}
                 <div>
                     {read !== "readed" ? <ButtonMarkRead read={read} id={id}/> : null} {route_box !== "spam" ? <ButtonMarkSpam id={id}/> : null}
                 </div>

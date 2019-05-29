@@ -13,6 +13,7 @@ const Home = loadable(() => import('./Home'));
 const Feed = loadable(() => import('./Feed'));
 const Tag = loadable(() => import('./Tag'));
 const Topic = loadable(() => import('./Topic'));
+const Series = loadable(() => import('./Series'));
 
 const App = () => (
     <ApolloProvider client={client}>
@@ -27,6 +28,7 @@ const App = () => (
                     <Route path="/feed" component={Feed}/>
                     <Route path="/tag" component={Tag}/>
                     <Route path="/topic" component={Topic}/>
+                    <Route path="/series" component={Series}/>
                     <Advice/>
                 </div>
             </Router>

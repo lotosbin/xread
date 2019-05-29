@@ -32,6 +32,7 @@ i18n
                     "Topic": "分类",
                     "Tag": "标签",
                     "Feed": "频道",
+                    "Series": "系列",
                     "Store": "发现",
                     "Advice": "建议",
                     "Login": "登录",
