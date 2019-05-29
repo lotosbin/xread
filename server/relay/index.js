@@ -4,7 +4,7 @@ export function makeConnection(getArticles) {
     return async (args) => {
         let {first, after, last, before} = args;
         const articles = await getArticles({...args, first: first + 1, last: last ? last + 1 : last});
-        let edges = articles.slice(0, last ? last : first).map(it => ({cursor: it.id.toString(), node: it})) || [];
+        let edges = articles.slice(0, last ? last : first).map(it => ({cursor: (it._id || it.id).toString(), node: it})) || [];
         let start = _.chain(edges).first().value();
         let end = _.chain(edges).last().value();
         return {

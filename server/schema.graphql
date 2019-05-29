@@ -46,11 +46,6 @@ type TopicEdge  {
     cursor: String!
     node: Topic!
 }
-type Series implements Node{
-    id:ID!
-    title:String
-    articles(first:Int,after:String,last:Int,before:String,box:String,read:String="all",priority:Int=0,search:ArticleInput): ArticleConnection
-}
 type Article implements Node {
     id: ID!
     title: String
@@ -88,7 +83,25 @@ type FeedEdge  {
     cursor: String!
     node: Feed!
 }
-
+type Series implements Node{
+    id:ID!
+    title: String!
+    articles(page:PageInput,box:String,read:String="all",priority:Int=0,search:ArticleInput):ArticleConnection
+}
+type SeriesConnection {
+    pageInfo: PageInfo!
+    edges: [SeriesEdge!]!
+}
+type SeriesEdge  {
+    cursor: String!
+    node: Series!
+}
+input PageInput{
+    first:Int
+    after:String
+    last:Int
+    before:String
+}
 # The "Query" type is the root of all GraphQL queries.
 # (A "Mutation" type will be covered later on.)
 type Query {
@@ -98,6 +111,7 @@ type Query {
     feeds(first:Int,after:String,last:Int,before:String):FeedConnection
     tags:TagConnection
     topics:TopicConnection
+    series(page:PageInput):SeriesConnection
 }
 type Mutation {
     addArticle(title: String, summary: String,link:String,time:String,feedId:String):Article

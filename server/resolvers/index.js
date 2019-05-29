@@ -6,6 +6,7 @@ import {tryCatch} from "ramda";
 import type {TArticleConnection} from "./common";
 import {mutations} from "./mutations";
 import {subscriptions} from "./subscriptions";
+import {getSeries} from "../services/series";
 
 const resolvers = {
     Node: {
@@ -69,20 +70,21 @@ const resolvers = {
             if (article.spam) return "spam";
             return "inbox"
         },
-        series: async ({seriesId}: TArticle, args, context): Promise<TSeries | null> => {
+        series: async ({seriesId2: seriesId}: TArticle, args, context): Promise<any | null> => {
+            console.log(`seriesId2:${seriesId}`);
             if (!seriesId) {
                 return null
             }
             return {
-                id: seriesId,
+                _id: seriesId,
                 title: seriesId,
             }
         }
     },
     Series: {
+        id: (parent) => parent._id,
         articles: async (series: TSeries, args, context): Promise<TArticleConnection> => {
-            console.debug(`resolve:series:args=${JSON.stringify(args)}`);
-            return await makeConnection(getArticles)({...args, seriesId: series.id});
+            return makeConnection(getArticles)({...args, ...args.page, seriesId: series._id});
         }
     },
     Feed: {
@@ -93,6 +95,7 @@ const resolvers = {
         articles: async (parent, args, context) => await makeConnection(getArticles)(args),
         feeds: async (parent, args, context) => await makeConnection(getFeeds)(args),
         tags: async (parent, args, context) => await makeConnection(getTags)(args),
+        series: async (parent, args, context) => await makeConnection(getSeries)(args),
         topics: async (parent, args, context) => await makeConnection(getTopics)(args),
         node: async (parent, {id, type}, context) => {
             if (type) {
@@ -105,9 +108,11 @@ const resolvers = {
                         }
                         break;
                     case "Tag":
-                        return ({id: id, name: id, __type: type || "Tag"});
+                        return ({id: id, name: id, __type: type});
                     case "Topic":
-                        return ({id: id, name: id, __type: type || "Topic"});
+                        return ({id: id, name: id, __type: type});
+                    case "Series":
+                        return ({_id: id, title: id, __type: type})
                 }
             }
             if (!(type && type !== "Feed")) {

@@ -120,7 +120,7 @@ export async function getArticles(args: TGetArticlesArgs) {
         }
     }
     if (seriesId) {
-        query.seriesId = seriesId;
+        query.seriesId2 = seriesId;
     }
     switch (box) {
         case "inbox":
@@ -170,13 +170,10 @@ type TAddArticleArgs = {
     feedId: string;
 }
 export type TSeries = {
-    id: string;
+    _id: string;
     title: string;
 }
 
-function generateSeriesId(title: string) {
-    return title.replace(/[一二三四五六七八九十零百千万0-9]/, '')
-}
 
 export async function addArticle({link, title, summary, time, feedId}: TAddArticleArgs): Promise<TArticle | null> {
     let database;
@@ -189,7 +186,6 @@ export async function addArticle({link, title, summary, time, feedId}: TAddArtic
             $set: {
                 link,
                 title,
-                seriesId: `${generateSeriesId(title)}`,
                 summary,
                 time
             }
@@ -321,6 +317,7 @@ export async function setArticlePriority(id: string, priorities: [TPriorityResul
     }
 }
 
+
 async function addArticleTopic(id: string, tag: string) {
     console.log(`addArticleTopic:id=${id},topic=${tag}`);
     let database;
@@ -346,7 +343,9 @@ export type TArticle = {
     tags: Array<string>;
     priority: number;
     spam: boolean;
+    /*@FlowDeprecated use seriesId2*/
     seriesId: string;
+    seriesId2: string;
 }
 
 export async function parseArticleKeywords(article: TArticle) {
@@ -359,23 +358,6 @@ export async function parseArticleKeywords(article: TArticle) {
     return []
 }
 
-export async function nextParseSeriesArticle(): Promise<TArticle> {
-    let database;
-    try {
-        database = await MongoClient.connect(mongoConnectionString, {useNewUrlParser: true});
-        const articles = await database.db("xread").collection("article").find({seriesId: {$exists: false}}).sort({_id: -1}).limit(1).toArray();
-        const result = R.head(articles);
-        if (result) {
-            result.id = result._id.toString();
-        }
-        console.debug(`nextParseSeriesArticle:${JSON.stringify(result)}`);
-        return result;
-    } finally {
-        if (database) {
-            await database.close();
-        }
-    }
-}
 
 export async function setArticleSeries(id: string, seriesId: string) {
     console.debug(`setArticleSeries:id=${id},seriesId=${seriesId}`);
@@ -387,17 +369,6 @@ export async function setArticleSeries(id: string, seriesId: string) {
     } finally {
         if (database) {
             await database.close();
-        }
-    }
-}
-
-export async function parseSeriesArticle() {
-    while (true) {
-        var article = await nextParseSeriesArticle();
-        if (article) {
-            await setArticleSeries(article.id, generateSeriesId(article.title || ""))
-        } else {
-            console.log(`no content`);
         }
     }
 }
