@@ -1,5 +1,5 @@
 // @flow
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -11,9 +11,23 @@ import styles from "./AppBar.module.css";
 import ThemeSwitch from "../containers/ThemeSwitch";
 import {useTranslation} from "react-i18next";
 import LanguageSwitch from "../containers/LanguageSwitch";
+import {do_login, do_logout, getUser} from "../oauth";
 
 const ButtonAppBar = () => {
     const {t, ready} = useTranslation("", {useSuspense: false});
+    const [login, setLogin] = useState(false);
+    const [username, setUsername] = useState(null);
+    useEffect(() => {
+        const run = async () => {
+            const user = await getUser();
+            if (user) {
+                setLogin(true);
+                setUsername(user.profile.sub);
+            }
+        };
+        // noinspection JSIgnoredPromiseFromCall
+        run();
+    }, []);
     return (
         <div>
             <AppBar position="static">
@@ -34,7 +48,8 @@ const ButtonAppBar = () => {
                     </Toolbar>
                     <ThemeSwitch/>
                     <LanguageSwitch />
-                    <Button color="inherit">{t('Login')}</Button>
+                    {login ? <div>Welcome {username}! <Button color="inherit" onClick={() => do_logout()}>{t('Logout')}</Button></div> :
+                        <Button color="inherit" onClick={() => do_login()}>{t('Login')}</Button>}
                 </Toolbar>
             </AppBar>
         </div>

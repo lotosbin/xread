@@ -7,12 +7,26 @@ import {InMemoryCache, IntrospectionFragmentMatcher} from 'apollo-cache-inmemory
 import {onError} from 'apollo-link-error';
 import {ApolloLink} from 'apollo-link';
 import introspectionQueryResultData from '../generated/graphql.json';
-
+import {setContext} from 'apollo-link-context';
+import {getUser} from '../oauth'
 // Create an http link:
 const httpLink = new HttpLink({
     uri: process.env.REACT_APP_API_URL
 });
-
+const authLink = setContext(async (_, {headers}) => {
+    // get the authentication token from local storage if it exists
+    const user = await getUser();
+    if (!user) {
+        return headers;
+    }
+    // return the headers to the context so httpLink can read them
+    return {
+        headers: {
+            ...headers,
+            authorization: user.access_token ? `Bearer ${user.access_token}` : "",
+        }
+    }
+});
 const wsLink = new WebSocketLink({
     uri: process.env.REACT_APP_WEBSOCKET_URL,
     options: {
@@ -28,7 +42,7 @@ const link = split(
         return kind === 'OperationDefinition' && operation === 'subscription';
     },
     wsLink,
-    httpLink,
+    authLink.concat(httpLink),
 );
 
 const fragmentMatcher = new IntrospectionFragmentMatcher({

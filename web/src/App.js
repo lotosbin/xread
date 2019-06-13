@@ -8,6 +8,7 @@ import AppBar from './components/AppBar'
 import {Advice} from "./components/Advice";
 import loadable from '@loadable/component'
 import GuessArticleListContainer from "./components/GuessArticleListContainer";
+import Callback from "./Callback";
 
 const Home = loadable(() => import('./Home'));
 const Feed = loadable(() => import('./Feed'));
@@ -29,6 +30,7 @@ const App = () => (
                     <Route path="/tag" component={Tag}/>
                     <Route path="/topic" component={Topic}/>
                     <Route path="/series" component={Series}/>
+                    <Route path="/oauth/callback" component={Callback}/>
                     <Advice/>
                 </div>
             </Router>
