@@ -10,7 +10,7 @@
     "baidu-aip-sdk": "^2.3.9",
     "graphql": "^14.1.1",
     "graphql-tools": "^4.0.4",
-    "lodash": "^4.17.13",
+    "lodash": "^4.17.19",
     "moment": "^2.24.0",
     "mongodb": "^3.1.13",
     "node-fetch": "^2.3.0",
