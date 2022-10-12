@@ -6,7 +6,7 @@
   "dependencies": {
     "apollo-fetch": "^0.7.0",
     "apollo-link-http": "^1.5.14",
-    "apollo-server": "^2.4.6",
+    "apollo-server": "^2.25.4",
     "baidu-aip-sdk": "^2.3.9",
     "graphql": "^14.1.1",
     "graphql-tools": "^4.0.4",
